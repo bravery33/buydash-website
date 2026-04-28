@@ -20,6 +20,12 @@ import {
 import { useEffect, useMemo, useState } from "react";
 
 const img = (name) => `/images/${name}`;
+const TALLY_FORM_URL = "https://tally.so/r/BzLWGQ";
+const CONTACT_EMAIL = "sales@buydash.co.kr";
+const externalFormProps = {
+  target: "_blank",
+  rel: "noopener noreferrer",
+};
 
 const navProducts = [
   { label: "Burn-in Sockets", href: "/burn-in-sockets" },
@@ -304,7 +310,6 @@ function Header() {
         <a href="/#applications" onClick={(e) => go(e, "/#applications")}>Applications</a>
         <a href="/#about" onClick={(e) => go(e, "/#about")}>About</a>
         <a href="/contact" onClick={(e) => go(e, "/contact")}>Contact</a>
-        <a className="quote-btn" href="/contact" onClick={(e) => go(e, "/contact")}>Request a Quote <ArrowRight size={16} /></a>
       </nav>
     </header>
   );
@@ -320,7 +325,7 @@ function HomePage() {
           <p className="hero-text">BUYDASH supplies probe cards, burn-in sockets, HTOL/HAST boards and temperature control systems for semiconductor test and reliability applications.</p>
           <div className="hero-actions">
             <a className="primary-btn" href="#products">View Products <ArrowRight size={17} /></a>
-            <a className="secondary-btn" href="/contact">Request a Quote</a>
+            <a className="secondary-btn" href={TALLY_FORM_URL} {...externalFormProps}>Request a Quote</a>
           </div>
           <div className="hero-metrics">
             <Metric value="Up to 2304" label="Digital Channels" />
@@ -569,11 +574,16 @@ function ContactPage() {
       <PageHero
         label="Request a Quote"
         title="Contact / Request a Quote"
-        text="Send us your test requirements. BUYDASH will review your application and help identify the right configuration."
+        text="Submit your technical requirements through the request form. BUYDASH will review your application and help identify the right configuration."
         image="probe-pins.png"
       />
       <section className="section contact-section">
         <form className="quote-form">
+          <div className="form-intro full">
+            <p className="eyebrow">Technical Request Form</p>
+            <h2>Share your test requirements through the request form</h2>
+            <p>Use the request form to submit package details, pitch, platform, channel count, DPS/HV needs, temperature range, site count and application goals. The BUYDASH team will review the information and follow up by email.</p>
+          </div>
           {fields.map((field) => (
             <label key={field}>
               <span>{field}</span>
@@ -595,12 +605,13 @@ function ContactPage() {
             <span>Attachment upload placeholder</span>
             <input type="file" />
           </label>
-          <button className="primary-btn form-submit" type="button">Submit Request <ArrowRight size={17} /></button>
+          <a className="primary-btn form-submit" href={TALLY_FORM_URL} {...externalFormProps}>Submit Request <ArrowRight size={17} /></a>
         </form>
         <aside className="contact-aside">
           <h2>BUYDASH</h2>
           <p>Semiconductor Test Interfaces</p>
           <dl>
+            <div><dt>Email</dt><dd><a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></dd></div>
             <div><dt>Business Registration No.</dt><dd>189-07-02993</dd></div>
             <div><dt>Mail-order Business Registration No.</dt><dd>2024-Gyeonggi Ansan-3370</dd></div>
             <div><dt>Location</dt><dd>Ansan-si, Gyeonggi-do, Republic of Korea</dd></div>
@@ -619,7 +630,7 @@ function PageHero({ label, title, text, image }) {
         <h1>{title}</h1>
         <p className="hero-text">{text}</p>
         <div className="hero-actions">
-          <a className="primary-btn" href="/contact">Request a Quote <ArrowRight size={17} /></a>
+          <a className="primary-btn" href={TALLY_FORM_URL} {...externalFormProps}>Request a Quote <ArrowRight size={17} /></a>
         </div>
       </div>
       <div className="page-hero-visual">
@@ -694,7 +705,7 @@ function Cta({ title, text }) {
         <h2>{title}</h2>
         <p>{text}</p>
       </div>
-      <a className="primary-btn" href="/contact">Request a Quote <ArrowRight size={17} /></a>
+      <a className="primary-btn" href={TALLY_FORM_URL} {...externalFormProps}>Request a Quote <ArrowRight size={17} /></a>
     </section>
   );
 }
@@ -707,6 +718,7 @@ function Footer() {
         <p>Semiconductor Test Interfaces</p>
       </div>
       <div className="footer-info">
+        <p><a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></p>
         <p>Business Registration No. 189-07-02993</p>
         <p>Mail-order Business Registration No. 2024-Gyeonggi Ansan-3370</p>
         <p>Ansan-si, Gyeonggi-do, Republic of Korea</p>

@@ -2,6 +2,18 @@
 
 Premium English website for BUYDASH semiconductor test interface solutions.
 
+Production domain:
+
+```text
+https://www.buydash.co.kr
+```
+
+Contact email:
+
+```text
+sales@buydash.co.kr
+```
+
 ## Install Dependencies
 
 ```bash
@@ -140,6 +152,18 @@ contact-aside
 ```
 
 Update the same company details there if they change.
+
+To update the public contact email, search for:
+
+```text
+CONTACT_EMAIL
+```
+
+To update the external request form URL, search for:
+
+```text
+TALLY_FORM_URL
+```
 
 ## Notes
 

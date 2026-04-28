@@ -766,6 +766,12 @@ textarea {
   color: rgba(255, 255, 255, 0.76);
 }
 
+.contact-aside a,
+.footer a {
+  color: inherit;
+  font-weight: 800;
+}
+
 .contact-aside dl {
   display: grid;
   gap: 20px;
@@ -800,6 +806,21 @@ textarea {
 
 .footer p {
   margin-bottom: 4px;
+}
+
+.form-intro {
+  padding-bottom: 10px;
+}
+
+.form-intro h2 {
+  margin-bottom: 8px;
+  font-size: clamp(1.45rem, 2.3vw, 2rem);
+}
+
+.form-intro p:last-child {
+  margin-bottom: 0;
+  color: var(--muted);
+  line-height: 1.62;
 }
 
 @media (max-width: 1180px) {
