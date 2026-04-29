@@ -100,11 +100,12 @@ Current image files:
 | --- | --- | --- |
 | `logo-buydash.png` | Optional logo asset, not required by layout | 560 x 150 px transparent PNG |
 | `homepage-mockup.png` | Reference asset only | Keep original reference image |
-| `hero-probe-card.png` | Home hero collage, Probe Cards hero | 5:4 light-background product crop, 900 x 720 px |
+| `hero-interface-system.svg` | Home hero abstract interface visual | Wide generated/abstract semiconductor interface visual, 1400 x 920 px or similar |
+| `hero-probe-card.png` | Probe Cards hero | 5:4 light-background product crop, 900 x 720 px |
 | `hero-burnin-socket.png` | Burn-in Sockets hero | 5:4 light-background product crop, 900 x 720 px |
-| `hero-htol-board.png` | Home hero collage, HTOL / HAST Boards hero | Wide light-background board crop, 1100 x 720 px |
-| `hero-temperature-controller.png` | Home hero collage, Temperature Controllers hero | 5:4 light-background product crop, 900 x 720 px |
-| `probe-card.png` | Home product card, Contact hero, Probe Cards overview, Astar / S200 card | 1:1 product crop, 900 x 900 px |
+| `hero-htol-board.png` | HTOL / HAST Boards hero | Wide light-background board crop, 1100 x 720 px |
+| `hero-temperature-controller.png` | Temperature Controllers hero | 5:4 light-background product crop, 900 x 720 px |
+| `probe-card.png` | Home product card, Probe Cards overview, Astar / S200 card | 1:1 product crop, 900 x 900 px |
 | `burn-in-socket.png` | Home product card | 1:1 product crop, 900 x 900 px |
 | `htol-hast-board.png` | Home product card, HTOL Board image card | 4:3 board crop, 1200 x 900 px |
 | `temperature-controller.png` | Home product card, Temperature Controller detail | 4:5 product crop, 900 x 1125 px |

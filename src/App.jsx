@@ -955,18 +955,11 @@ function HomePage({ lang, t }) {
           </div>
           <div className="interface-stage" aria-label="BUYDASH test interface system visual">
             <div className="stage-label">Interface system stack</div>
-            <div className="stage-card stage-probe">
-              <img src={img("hero-probe-card.png")} alt="Probe card" />
-            </div>
-            <div className="stage-card stage-controller">
-              <img src={img("hero-temperature-controller.png")} alt="Temperature controller" />
-            </div>
-            <div className="stage-card stage-board">
-              <img src={img("hero-htol-board.png")} alt="HTOL / HAST board" />
-            </div>
-            <span className="stage-line line-a" />
-            <span className="stage-line line-b" />
-            <span className="stage-line line-c" />
+            <img
+              className="generated-interface-visual"
+              src={img("hero-interface-system.svg")}
+              alt="Abstract semiconductor test interface visual"
+            />
           </div>
         </div>
       </section>
