@@ -1,19 +1,14 @@
 import {
   ArrowRight,
-  BarChart3,
   CheckCircle2,
   ChevronDown,
   CircuitBoard,
-  ClipboardCheck,
-  Gauge,
   Headphones,
   Layers3,
   Menu,
-  Microscope,
   ShieldCheck,
   SlidersHorizontal,
   Target,
-  Thermometer,
   X,
   Zap,
 } from "lucide-react";
@@ -202,9 +197,9 @@ const copy = {
       ctaText: "Send channel count, input sensor type, power requirements, temperature range and board configuration.",
     },
     contact: {
-      label: "Request a Quote",
+      label: "Contact",
       title: "Contact BUYDASH",
-      text: "Submit your technical requirements through the request form. BUYDASH will review your application and help identify the right configuration.",
+      text: "Submit your technical requirements through the form below. BUYDASH will review your application and help identify the right configuration.",
       formLabel: "Technical Request Form",
       formTitle: "Share your test requirements through the request form",
       formText: "Use the request form to submit package details, pitch, platform, channel count, DPS/HV needs, temperature range, site count and application goals. The BUYDASH team will review the information and follow up by email.",
@@ -223,7 +218,18 @@ const copy = {
       productPlaceholder: "Select product type",
       messagePlaceholder: "Share test conditions, package details, target schedule and any special requirements.",
     },
-    footer: { business: "Business Registration No.", mailOrder: "Mail-order Business Registration No.", location: "Location" },
+    footer: {
+      products: "Products",
+      contact: "Contact",
+      businessInfo: "Business Information",
+      email: "Email",
+      website: "Website",
+      location: "Location",
+      companyName: "BUYDASH / 바이대시",
+      business: "Business Registration No. 189-07-02993",
+      mailOrder: "Mail-order Business Registration No. 2024-Gyeonggi Ansan-3370",
+      address: "Ansan-si, Gyeonggi-do, Republic of Korea",
+    },
   },
   ko: {
     brandSubtitle: "반도체 테스트 인터페이스",
@@ -320,9 +326,9 @@ const copy = {
       ctaText: "채널 수, 입력 센서 타입, 전원 요구사항, 온도 범위, 보드 구성을 보내주세요.",
     },
     contact: {
-      label: "견적 문의",
+      label: "문의",
       title: "BUYDASH 문의",
-      text: "요청 양식으로 기술 요구사항을 보내주시면 BUYDASH가 애플리케이션에 맞는 구성을 검토합니다.",
+      text: "아래 양식으로 기술 요구사항을 보내주시면 BUYDASH가 적용 분야에 맞는 구성을 검토합니다.",
       formLabel: "기술 요청 양식",
       formTitle: "테스트 요구사항을 요청 양식으로 보내주세요",
       formText: "패키지, 피치, 플랫폼, 채널 수, DPS/HV 요구사항, 온도 범위, 사이트 수, 애플리케이션 목표를 입력해 주세요. BUYDASH 팀이 검토 후 이메일로 연락드립니다.",
@@ -341,7 +347,18 @@ const copy = {
       productPlaceholder: "제품 유형을 선택하세요",
       messagePlaceholder: "시험 조건, 패키지 정보, 목표 일정, 특수 요구사항을 입력해 주세요.",
     },
-    footer: { business: "사업자등록번호", mailOrder: "통신판매업 신고번호", location: "소재지" },
+    footer: {
+      products: "제품",
+      contact: "문의",
+      businessInfo: "사업자 정보",
+      email: "이메일",
+      website: "웹사이트",
+      location: "소재지",
+      companyName: "BUYDASH / 바이대시",
+      business: "Business Registration No. 189-07-02993",
+      mailOrder: "Mail-order Business Registration No. 2024-Gyeonggi Ansan-3370",
+      address: "Ansan-si, Gyeonggi-do, Republic of Korea",
+    },
   },
   zh: {
     brandSubtitle: "半导体测试接口",
@@ -438,9 +455,9 @@ const copy = {
       ctaText: "请发送通道数、输入传感器类型、电源要求、温度范围和板卡配置。",
     },
     contact: {
-      label: "提交询价",
+      label: "联系",
       title: "联系 BUYDASH",
-      text: "请通过请求表提交技术需求。BUYDASH 将评估您的应用并协助确认合适配置。",
+      text: "请通过下方表单提交您的技术需求。BUYDASH 将根据您的应用需求协助确认合适的配置。",
       formLabel: "技术需求表",
       formTitle: "通过请求表提交您的测试需求",
       formText: "请提交封装、Pitch、平台、通道数、DPS/HV 需求、温度范围、Site 数量和应用目标。BUYDASH 团队将审核并通过邮件跟进。",
@@ -459,7 +476,18 @@ const copy = {
       productPlaceholder: "请选择产品类型",
       messagePlaceholder: "请填写测试条件、封装信息、目标日程和特殊要求。",
     },
-    footer: { business: "营业登记号", mailOrder: "通信销售登记号", location: "所在地" },
+    footer: {
+      products: "产品",
+      contact: "联系",
+      businessInfo: "企业信息",
+      email: "邮箱",
+      website: "网站",
+      location: "所在地",
+      companyName: "BUYDASH / 바이대시",
+      business: "Business Registration No. 189-07-02993",
+      mailOrder: "Mail-order Business Registration No. 2024-Gyeonggi Ansan-3370",
+      address: "Ansan-si, Gyeonggi-do, Republic of Korea",
+    },
   },
 };
 
@@ -604,13 +632,6 @@ const portfolio = [
     href: "/burn-in-sockets#probe-pins",
     image: "probe-pins.png",
   },
-];
-
-const applications = [
-  { title: "Wafer Probe Test", icon: Microscope },
-  { title: "HTOL Reliability Test", icon: Thermometer },
-  { title: "HAST Stress Test", icon: Gauge },
-  { title: "Product Validation", icon: ClipboardCheck },
 ];
 
 const reasons = [
@@ -822,7 +843,7 @@ function App() {
     <>
       <Header lang={lang} route={route} t={t} />
       <main>{page}</main>
-      <Footer t={t} />
+      <Footer lang={lang} t={t} />
     </>
   );
 }
@@ -837,6 +858,8 @@ function Header({ lang, route, t }) {
       if (href.includes("#")) {
         const [, hash] = href.split("#");
         setTimeout(() => document.getElementById(hash)?.scrollIntoView({ behavior: "smooth" }), 80);
+      } else if (href === "/" || href === "/ko" || href === "/zh") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
       }
       setOpen(false);
     }
@@ -844,7 +867,7 @@ function Header({ lang, route, t }) {
 
   return (
     <header className="site-header">
-      <a className="brand" href="/" onClick={(e) => go(e, "/")}>
+      <a className="brand" href={localizePath(lang, "/")} onClick={(e) => go(e, localizePath(lang, "/"))}>
         <span className="brand-mark">B</span>
         <span>
           <strong>BUYDASH</strong>
@@ -865,7 +888,6 @@ function Header({ lang, route, t }) {
             ))}
           </div>
         </div>
-        <a href={`${localizePath(lang, "/")}#applications`} onClick={(e) => go(e, `${localizePath(lang, "/")}#applications`)}>{t.nav.applications}</a>
         <a href={`${localizePath(lang, "/")}#about`} onClick={(e) => go(e, `${localizePath(lang, "/")}#about`)}>{t.nav.about}</a>
         <a href={localizePath(lang, "/contact")} onClick={(e) => go(e, localizePath(lang, "/contact"))}>{t.nav.contact}</a>
         <div className="language-switcher" aria-label="Language selector">
@@ -922,21 +944,6 @@ function HomePage({ lang, t }) {
                 <span>{t.viewMore} <ArrowRight size={16} /></span>
               </div>
             </a>
-          ))}
-        </div>
-      </section>
-
-      <section id="applications" className="section applications-band">
-        <div className="applications-intro">
-          <h2>{t.home.applicationsTitle}</h2>
-          <p>{t.home.applicationsText}</p>
-        </div>
-        <div className="application-grid">
-          {applications.map(({ title, icon: Icon }) => (
-            <article className="application-card" key={title}>
-              <Icon size={34} />
-              <h3>{t.applications[applications.findIndex((item) => item.title === title)]}</h3>
-            </article>
           ))}
         </div>
       </section>
@@ -1217,6 +1224,7 @@ function ContactPage({ lang, t }) {
         title={t.contact.title}
         text={t.contact.text}
         image="probe-card.png"
+        showAction={false}
       />
       <section className="section contact-section">
         <form className="quote-form" onSubmit={submitForm} noValidate>
@@ -1300,12 +1308,14 @@ function ContactPage({ lang, t }) {
         </form>
         <aside className="contact-aside">
           <h2>BUYDASH</h2>
-          <p>Semiconductor Test Interfaces</p>
+          <p>{t.brandSubtitle}</p>
           <dl>
-            <div><dt>Email</dt><dd><a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></dd></div>
-            <div><dt>{t.footer.business}</dt><dd>189-07-02993</dd></div>
-            <div><dt>{t.footer.mailOrder}</dt><dd>2024-Gyeonggi Ansan-3370</dd></div>
-            <div><dt>{t.footer.location}</dt><dd>Ansan-si, Gyeonggi-do, Republic of Korea</dd></div>
+            <div><dt>{t.footer.email}</dt><dd><a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></dd></div>
+            <div><dt>{t.footer.location}</dt><dd>{t.footer.address}</dd></div>
+            <div>
+              <dt>{t.footer.businessInfo}</dt>
+              <dd>{t.footer.companyName}<br />{t.footer.business}<br />{t.footer.mailOrder}</dd>
+            </div>
           </dl>
         </aside>
       </section>
@@ -1313,16 +1323,18 @@ function ContactPage({ lang, t }) {
   );
 }
 
-function PageHero({ lang = "en", t = copy.en, label, title, text, image, visual }) {
+function PageHero({ lang = "en", t = copy.en, label, title, text, image, visual, showAction = true }) {
   return (
     <section className="hero page-hero">
       <div className="hero-copy">
         <p className="eyebrow">{label}</p>
         <h1>{title}</h1>
         <p className="hero-text">{text}</p>
-        <div className="hero-actions">
-          <a className="primary-btn" href={localizePath(lang, "/contact")}>{t.requestQuote} <ArrowRight size={17} /></a>
-        </div>
+        {showAction ? (
+          <div className="hero-actions">
+            <a className="primary-btn" href={localizePath(lang, "/contact")}>{t.requestQuote} <ArrowRight size={17} /></a>
+          </div>
+        ) : null}
       </div>
       <div className="page-hero-visual">
         {visual || <img src={img(image)} alt={title} />}
@@ -1401,18 +1413,48 @@ function Cta({ lang = "en", t = copy.en, title, text }) {
   );
 }
 
-function Footer({ t = copy.en }) {
+function Footer({ lang = "en", t = copy.en }) {
+  const footerProducts = [
+    { label: t.portfolio[0][0], href: "/probe-cards" },
+    { label: t.portfolio[1][0], href: "/burn-in-sockets" },
+    { label: t.portfolio[2][0], href: "/htol-hast-boards" },
+    { label: t.portfolio[3][0], href: "/temperature-controllers" },
+    { label: t.portfolio[4][0], href: "/burn-in-sockets#probe-pins" },
+  ];
+
   return (
     <footer className="footer">
-      <div>
+      <div className="footer-brand">
         <h2>BUYDASH</h2>
         <p>{t.brandSubtitle}</p>
       </div>
-      <div className="footer-info">
-        <p><a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></p>
-        <p>{t.footer.business}</p>
-        <p>{t.footer.mailOrder}</p>
-        <p>{t.footer.location}</p>
+      <div className="footer-columns">
+        <div>
+          <h3>{t.footer.products}</h3>
+          <ul>
+            {footerProducts.map((item) => (
+              <li key={item.href}>
+                <a href={localizePath(lang, item.href)}>{item.label}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <h3>{t.footer.contact}</h3>
+          <ul>
+            <li>{t.footer.email}: <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></li>
+            <li>{t.footer.website}: <a href="https://www.buydash.co.kr">https://www.buydash.co.kr</a></li>
+            <li>{t.footer.location}: {t.footer.address}</li>
+          </ul>
+        </div>
+        <div>
+          <h3>{t.footer.businessInfo}</h3>
+          <ul>
+            <li>{t.footer.companyName}</li>
+            <li>{t.footer.business}</li>
+            <li>{t.footer.mailOrder}</li>
+          </ul>
+        </div>
       </div>
     </footer>
   );
