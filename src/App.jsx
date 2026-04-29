@@ -927,8 +927,6 @@ function HomePage({ lang, t }) {
           <img className="collage-board" src={img("hero-htol-board.png")} alt="HTOL board" />
           <img className="collage-probe" src={img("hero-probe-card.png")} alt="Probe card" />
           <img className="collage-controller" src={img("hero-temperature-controller.png")} alt="Temperature controller" />
-          <img className="collage-socket" src={img("hero-burnin-socket.png")} alt="Burn-in socket" />
-          <img className="collage-pins" src={img("probe-pins.png")} alt="Probe pins" />
         </div>
       </section>
 

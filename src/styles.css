@@ -339,38 +339,26 @@ h3 {
 .hero-collage img {
   position: absolute;
   object-fit: contain;
-  filter: drop-shadow(0 28px 34px rgba(0, 0, 0, 0.38));
+  filter: drop-shadow(0 26px 32px rgba(0, 0, 0, 0.34));
 }
 
 .collage-board {
-  right: 7%;
-  bottom: 14%;
-  width: 68%;
-  transform: perspective(900px) rotateX(55deg) rotateZ(-5deg);
+  right: 4%;
+  bottom: 9%;
+  width: 74%;
+  transform: perspective(900px) rotateX(52deg) rotateZ(-5deg);
 }
 
 .collage-probe {
-  top: 2%;
-  left: 5%;
-  width: 34%;
+  top: 6%;
+  left: 3%;
+  width: 32%;
 }
 
 .collage-controller {
-  right: 1%;
-  top: 17%;
-  width: 27%;
-}
-
-.collage-socket {
-  left: 7%;
-  bottom: 8%;
+  right: 0;
+  top: 14%;
   width: 26%;
-}
-
-.collage-pins {
-  right: 24%;
-  top: 2%;
-  width: 22%;
 }
 
 .section {
@@ -1054,24 +1042,16 @@ textarea {
 
   .collage-board {
     right: 0;
-    bottom: 18%;
-    width: 78%;
+    bottom: 12%;
+    width: 80%;
   }
 
   .collage-probe {
-    width: 43%;
+    width: 40%;
   }
 
   .collage-controller {
-    width: 35%;
-  }
-
-  .collage-socket {
-    width: 34%;
-  }
-
-  .collage-pins {
-    width: 30%;
+    width: 32%;
   }
 
   .portfolio-grid,

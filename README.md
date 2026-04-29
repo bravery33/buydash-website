@@ -100,15 +100,15 @@ Current image files:
 | --- | --- | --- |
 | `logo-buydash.png` | Optional logo asset, not required by layout | 560 x 150 px transparent PNG |
 | `homepage-mockup.png` | Reference asset only | Keep original reference image |
-| `hero-probe-card.png` | Home hero collage, Probe Cards hero | 1:1 or 4:3 transparent PNG, 900 px wide |
-| `hero-burnin-socket.png` | Home hero collage, Burn-in Sockets hero | 1:1 transparent PNG, 800 px wide |
-| `hero-htol-board.png` | Home hero collage, HTOL / HAST Boards hero | 4:3 transparent or white-background PNG, 1000 px wide |
-| `hero-temperature-controller.png` | Home hero collage, Temperature Controllers hero | 4:5 transparent or white-background PNG, 800 px tall |
-| `probe-card.png` | Home product card, Probe Cards overview, Astar / S200 card | 1:1 product crop, 900 x 900 px |
+| `hero-probe-card.png` | Home hero collage, Probe Cards hero | 5:4 light-background product crop, 900 x 720 px |
+| `hero-burnin-socket.png` | Burn-in Sockets hero | 5:4 light-background product crop, 900 x 720 px |
+| `hero-htol-board.png` | Home hero collage, HTOL / HAST Boards hero | Wide light-background board crop, 1100 x 720 px |
+| `hero-temperature-controller.png` | Home hero collage, Temperature Controllers hero | 5:4 light-background product crop, 900 x 720 px |
+| `probe-card.png` | Home product card, Contact hero, Probe Cards overview, Astar / S200 card | 1:1 product crop, 900 x 900 px |
 | `burn-in-socket.png` | Home product card | 1:1 product crop, 900 x 900 px |
 | `htol-hast-board.png` | Home product card, HTOL Board image card | 4:3 board crop, 1200 x 900 px |
 | `temperature-controller.png` | Home product card, Temperature Controller detail | 4:5 product crop, 900 x 1125 px |
-| `probe-pins.png` | Home product card, Probe Pins section, Contact hero | 4:3 transparent PNG, 900 x 650 px |
+| `probe-pins.png` | Home product card, Probe Pins section | 1:1 light-background product crop, 900 x 900 px |
 | `probe-v93000.png` | V93000 model card | 2:1 probe card crop, 1200 x 600 px |
 | `probe-magnum2.png` | Magnum2 model card | 2:1 probe card crop, 1200 x 600 px |
 | `probe-j750hd.png` | J750 / J750HD model card | 2:1 probe card crop, 1200 x 600 px |
@@ -139,6 +139,10 @@ src/App.jsx
 ```
 
 Look for product data arrays such as `portfolio`, `probeGroups`, `socketTypes`, and `boardSpecs`.
+
+## Image Quality Notes
+
+The current images are cleaned PDF-derived temporary assets. They have been cropped, centered and placed on light neutral backgrounds without generating fake product photos. The socket images are still line-art source images from the PDF and should be replaced later with clean product photos when available. Some probe card and board images may retain unavoidable product silkscreen text from the source material; replace those files with cleaner product photography using the same filenames if brand-neutral images become available.
 
 ## Update Footer Company Information
 
