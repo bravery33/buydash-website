@@ -908,52 +908,110 @@ function Header({ lang, route, t }) {
 }
 
 function HomePage({ lang, t }) {
+  const homeDesignCopy = {
+    en: {
+      heroLabel: "Semiconductor test interface solutions partner",
+      workflowTitle: "From test requirement to configured interface",
+      workflowText: "Package, pitch, platform, channel count, DPS/HV resources, temperature range and site count are reviewed together to identify the right configuration.",
+      workflowSteps: ["Requirement review", "Configuration match", "Supply coordination"],
+      whyTitle: "Technical sourcing support, not a generic catalogue",
+    },
+    ko: {
+      heroLabel: "반도체 테스트 인터페이스 솔루션 파트너",
+      workflowTitle: "테스트 요구사항에서 맞춤 구성까지",
+      workflowText: "패키지, 피치, 플랫폼, 채널 수, DPS/HV 리소스, 온도 범위, 사이트 수를 함께 검토해 적합한 구성을 확인합니다.",
+      workflowSteps: ["요구사항 검토", "구성 매칭", "공급 조율"],
+      whyTitle: "일반 카탈로그가 아닌 테스트 애플리케이션 중심의 기술 소싱",
+    },
+    zh: {
+      heroLabel: "半导体测试接口解决方案伙伴",
+      workflowTitle: "从测试需求到接口配置",
+      workflowText: "封装、Pitch、平台、通道数、DPS/HV 资源、温度范围和 Site 数量将一起评估，以确认合适配置。",
+      workflowSteps: ["需求评估", "配置匹配", "供应协调"],
+      whyTitle: "不是通用目录，而是围绕测试应用的技术选型支持",
+    },
+  }[lang] || {};
+
   return (
     <>
-      <section className="hero home-hero">
-        <div className="hero-copy">
-          <p className="eyebrow">{t.home.eyebrow}</p>
-          <h1>{t.home.title}</h1>
-          <p className="hero-text">{t.home.text}</p>
-          <div className="hero-actions">
-            <a className="primary-btn" href="#products">{t.viewProducts} <ArrowRight size={17} /></a>
-            <a className="secondary-btn" href={localizePath(lang, "/contact")}>{t.requestQuote}</a>
+      <section className="home-hero-redesign">
+        <div className="home-hero-grid">
+          <div className="home-hero-copy">
+            <p className="eyebrow">{homeDesignCopy.heroLabel}</p>
+            <h1>{t.home.title}</h1>
+            <p className="hero-text">{t.home.text}</p>
+            <div className="hero-actions">
+              <a className="primary-btn" href="#products">{t.viewProducts} <ArrowRight size={17} /></a>
+              <a className="secondary-btn" href={localizePath(lang, "/contact")}>{t.requestQuote}</a>
+            </div>
+            <div className="home-metrics">
+              {t.home.metrics.map(([value, label]) => (
+                <div className="home-metric" key={label}>
+                  <strong>{value}</strong>
+                  <span>{label}</span>
+                </div>
+              ))}
+            </div>
           </div>
-          <div className="hero-metrics">
-            {t.home.metrics.map(([value, label]) => <Metric key={label} value={value} label={label} />)}
+          <div className="interface-stage" aria-label="BUYDASH test interface system visual">
+            <div className="stage-label">Interface system stack</div>
+            <div className="stage-card stage-probe">
+              <img src={img("hero-probe-card.png")} alt="Probe card" />
+            </div>
+            <div className="stage-card stage-controller">
+              <img src={img("hero-temperature-controller.png")} alt="Temperature controller" />
+            </div>
+            <div className="stage-card stage-board">
+              <img src={img("hero-htol-board.png")} alt="HTOL / HAST board" />
+            </div>
+            <span className="stage-line line-a" />
+            <span className="stage-line line-b" />
+            <span className="stage-line line-c" />
           </div>
-        </div>
-        <div className="hero-collage" aria-label="BUYDASH product collage">
-          <img className="collage-board" src={img("hero-htol-board.png")} alt="HTOL board" />
-          <img className="collage-probe" src={img("hero-probe-card.png")} alt="Probe card" />
-          <img className="collage-controller" src={img("hero-temperature-controller.png")} alt="Temperature controller" />
         </div>
       </section>
 
-      <section id="products" className="section">
-        <SectionHeading label={t.home.productLabel} title={t.home.productTitle} />
-        <div className="portfolio-grid">
+      <section id="products" className="section home-product-system">
+        <div className="home-section-heading">
+          <p className="eyebrow">{t.home.productLabel}</p>
+          <h2>{t.home.productTitle}</h2>
+        </div>
+        <div className="system-grid">
           {portfolio.map((item, index) => (
-            <a className="product-card" key={item.href} href={localizePath(lang, item.href)}>
-              <img src={img(item.image)} alt={item.title} />
-              <div>
-                <h3>{t.portfolio[index][0]}</h3>
-                <p>{t.portfolio[index][1]}</p>
-                <span>{t.viewMore} <ArrowRight size={16} /></span>
+            <a className={index === 0 ? "system-card featured" : "system-card"} key={item.href} href={localizePath(lang, item.href)}>
+              <div className="system-visual">
+                <img src={img(item.image)} alt={item.title} />
               </div>
+              <h3>{t.portfolio[index][0]}</h3>
+              <p>{t.portfolio[index][1]}</p>
+              <span>{t.viewMore} <ArrowRight size={16} /></span>
             </a>
           ))}
+          <article className="workflow-panel">
+            <p className="eyebrow">{homeDesignCopy.workflowSteps[0]}</p>
+            <h3>{homeDesignCopy.workflowTitle}</h3>
+            <p>{homeDesignCopy.workflowText}</p>
+            <div className="workflow-steps">
+              {homeDesignCopy.workflowSteps.map((step) => <span key={step}>{step}</span>)}
+            </div>
+          </article>
         </div>
       </section>
 
-      <section id="about" className="section dark-section">
-        <SectionHeading label={t.home.whyLabel} title={t.home.whyTitle} />
-        <div className="reason-grid">
+      <section id="about" className="section home-why">
+        <div className="home-section-heading">
+          <p className="eyebrow">{t.home.whyLabel}</p>
+          <h2>{homeDesignCopy.whyTitle}</h2>
+        </div>
+        <div className="home-reason-grid">
           {reasons.map(({ title, icon: Icon }, index) => (
-            <article className="reason-card" key={title}>
-              <Icon size={30} />
-              <h3>{t.reasons[index][0]}</h3>
-              <p>{t.reasons[index][1]}</p>
+            <article className="home-reason-card" key={title}>
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              <Icon size={26} />
+              <div>
+                <h3>{t.reasons[index][0]}</h3>
+                <p>{t.reasons[index][1]}</p>
+              </div>
             </article>
           ))}
         </div>
