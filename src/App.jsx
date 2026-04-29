@@ -23,6 +23,42 @@ const img = (name) => `/images/${name}`;
 const CONTACT_EMAIL = "sales@buydash.co.kr";
 const CONTACT_SUCCESS_MESSAGE = "Thank you. Your request has been submitted successfully. BUYDASH will review your requirements and contact you shortly.";
 const CONTACT_ERROR_MESSAGE = "Sorry, your request could not be sent. Please email sales@buydash.co.kr directly.";
+const CANONICAL_DOMAIN = "https://www.buydash.co.kr";
+
+const pageMeta = {
+  "/": {
+    title: "BUYDASH | Semiconductor Test Interface Solutions",
+    description: "BUYDASH supplies probe cards, burn-in sockets, HTOL/HAST boards and temperature control systems for semiconductor test and reliability applications.",
+  },
+  "/probe-cards": {
+    title: "Probe Card Solutions | BUYDASH",
+    description: "Custom probe card configurations for V93000, Magnum2, Astar/S200, J750/J750HD, 3380/3360, S100, D10, V50 and T5830 wafer test platforms.",
+  },
+  "/burn-in-sockets": {
+    title: "Burn-in Socket Solutions | BUYDASH",
+    description: "High-reliability burn-in sockets and probe pins for HTOL, HAST and high-temperature semiconductor reliability test environments.",
+  },
+  "/htol-hast-boards": {
+    title: "HTOL / HAST Burn-in Boards | BUYDASH",
+    description: "Custom HTOL and HAST burn-in boards, independent temperature-control HTOL boards and mother-daughter board configurations for reliability testing.",
+  },
+  "/temperature-controllers": {
+    title: "6-Channel Temperature Controller | BUYDASH",
+    description: "Independent PID temperature control system for burn-in boards, socket heating setups and semiconductor reliability test applications.",
+  },
+  "/contact": {
+    title: "Contact BUYDASH | Request Semiconductor Test Interface Support",
+    description: "Submit semiconductor test interface requirements to BUYDASH for probe cards, burn-in sockets, HTOL/HAST boards, temperature controllers and probe pins.",
+  },
+};
+
+const requiredMessages = {
+  name: "Name is required.",
+  company: "Company is required.",
+  email: "Email is required.",
+  productType: "Product Type is required.",
+  message: "Message is required.",
+};
 
 const initialContactForm = {
   name: "",
@@ -42,6 +78,43 @@ const initialContactForm = {
   message: "",
   website: "",
 };
+
+function isValidEmail(value) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
+function validateContactForm(values) {
+  const errors = {};
+
+  Object.entries(requiredMessages).forEach(([field, message]) => {
+    if (!values[field].trim()) {
+      errors[field] = message;
+    }
+  });
+
+  if (values.email.trim() && !isValidEmail(values.email.trim())) {
+    errors.email = "Please enter a valid email address.";
+  }
+
+  return errors;
+}
+
+function setMetaContent(selector, content) {
+  const element = document.querySelector(selector);
+  if (element) {
+    element.setAttribute("content", content);
+  }
+}
+
+function setCanonicalUrl(url) {
+  let canonical = document.querySelector('link[rel="canonical"]');
+  if (!canonical) {
+    canonical = document.createElement("link");
+    canonical.setAttribute("rel", "canonical");
+    document.head.appendChild(canonical);
+  }
+  canonical.setAttribute("href", url);
+}
 
 const navProducts = [
   { label: "Burn-in Sockets", href: "/burn-in-sockets" },
@@ -257,6 +330,20 @@ function App() {
     } else {
       window.scrollTo({ top: 0, behavior: "instant" });
     }
+  }, [path]);
+
+  useEffect(() => {
+    const meta = pageMeta[path] || pageMeta["/"];
+    const canonicalUrl = `${CANONICAL_DOMAIN}${path === "/" ? "/" : path}`;
+
+    document.title = meta.title;
+    setMetaContent('meta[name="description"]', meta.description);
+    setMetaContent('meta[property="og:title"]', meta.title);
+    setMetaContent('meta[property="og:description"]', meta.description);
+    setMetaContent('meta[property="og:url"]', canonicalUrl);
+    setMetaContent('meta[name="twitter:title"]', meta.title);
+    setMetaContent('meta[name="twitter:description"]', meta.description);
+    setCanonicalUrl(canonicalUrl);
   }, [path]);
 
   const page = useMemo(() => {
@@ -585,18 +672,35 @@ function TemperatureControllersPage() {
 
 function ContactPage() {
   const [formData, setFormData] = useState(initialContactForm);
+  const [fieldErrors, setFieldErrors] = useState({});
   const [formStatus, setFormStatus] = useState({ type: "", message: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const updateField = (event) => {
     const { name, value } = event.target;
     setFormData((current) => ({ ...current, [name]: value }));
+    setFieldErrors((current) => {
+      if (!current[name]) {
+        return current;
+      }
+      const next = { ...current };
+      delete next[name];
+      return next;
+    });
   };
 
   const submitForm = async (event) => {
     event.preventDefault();
-    setIsSubmitting(true);
     setFormStatus({ type: "", message: "" });
+
+    const errors = validateContactForm(formData);
+    setFieldErrors(errors);
+
+    if (Object.keys(errors).length > 0) {
+      return;
+    }
+
+    setIsSubmitting(true);
 
     try {
       const response = await fetch("/api/contact", {
@@ -610,6 +714,7 @@ function ContactPage() {
       }
 
       setFormData(initialContactForm);
+      setFieldErrors({});
       setFormStatus({ type: "success", message: CONTACT_SUCCESS_MESSAGE });
     } catch (error) {
       setFormStatus({ type: "error", message: CONTACT_ERROR_MESSAGE });
@@ -623,6 +728,10 @@ function ContactPage() {
     { label: "Company", name: "company", required: true },
     { label: "Email", name: "email", type: "email", required: true },
     { label: "Country", name: "country" },
+  ];
+
+  const secondaryFields = [
+    { label: "Target Application", name: "targetApplication" },
     { label: "Test Platform", name: "testPlatform" },
     { label: "Package Size", name: "packageSize" },
     { label: "Pitch", name: "pitch" },
@@ -631,7 +740,6 @@ function ContactPage() {
     { label: "Temperature Range", name: "temperatureRange" },
     { label: "Site Count", name: "siteCount" },
     { label: "Expected Quantity", name: "expectedQuantity" },
-    { label: "Target Application", name: "targetApplication" },
   ];
 
   return (
@@ -640,14 +748,15 @@ function ContactPage() {
         label="Request a Quote"
         title="Contact / Request a Quote"
         text="Submit your technical requirements through the request form. BUYDASH will review your application and help identify the right configuration."
-        image="probe-pins.png"
+        visual={<ContactHeroVisual />}
       />
       <section className="section contact-section">
-        <form className="quote-form" onSubmit={submitForm}>
+        <form className="quote-form" onSubmit={submitForm} noValidate>
           <div className="form-intro full">
             <p className="eyebrow">Technical Request Form</p>
             <h2>Share your test requirements through the request form</h2>
             <p>Use the request form to submit package details, pitch, platform, channel count, DPS/HV needs, temperature range, site count and application goals. The BUYDASH team will review the information and follow up by email.</p>
+            <p className="form-note">For drawings or technical documents, please mention them in the message. Our team will follow up by email.</p>
           </div>
           <label className="honeypot" aria-hidden="true">
             <span>Website</span>
@@ -669,17 +778,38 @@ function ContactPage() {
                 value={formData[field.name]}
                 onChange={updateField}
                 placeholder={field.label}
-                required={field.required}
+                aria-invalid={fieldErrors[field.name] ? "true" : "false"}
+                aria-describedby={fieldErrors[field.name] ? `${field.name}-error` : undefined}
               />
+              {fieldErrors[field.name] ? <span className="field-error" id={`${field.name}-error`}>{fieldErrors[field.name]}</span> : null}
             </label>
           ))}
           <label>
             <span>Product Type *</span>
-            <select name="productType" value={formData.productType} onChange={updateField} required>
+            <select
+              name="productType"
+              value={formData.productType}
+              onChange={updateField}
+              aria-invalid={fieldErrors.productType ? "true" : "false"}
+              aria-describedby={fieldErrors.productType ? "productType-error" : undefined}
+            >
               <option value="" disabled>Select product type</option>
               {["Probe Card", "Burn-in Socket", "HTOL / HAST Board", "Temperature Controller", "Probe Pins", "Custom Solution"].map((type) => <option key={type}>{type}</option>)}
             </select>
+            {fieldErrors.productType ? <span className="field-error" id="productType-error">{fieldErrors.productType}</span> : null}
           </label>
+          {secondaryFields.map((field) => (
+            <label key={field.name}>
+              <span>{field.label}</span>
+              <input
+                type="text"
+                name={field.name}
+                value={formData[field.name]}
+                onChange={updateField}
+                placeholder={field.label}
+              />
+            </label>
+          ))}
           <label className="full">
             <span>Message *</span>
             <textarea
@@ -688,8 +818,10 @@ function ContactPage() {
               onChange={updateField}
               rows="6"
               placeholder="Share test conditions, package details, target schedule and any special requirements."
-              required
+              aria-invalid={fieldErrors.message ? "true" : "false"}
+              aria-describedby={fieldErrors.message ? "message-error" : undefined}
             />
+            {fieldErrors.message ? <span className="field-error" id="message-error">{fieldErrors.message}</span> : null}
           </label>
           {formStatus.message ? (
             <p className={`form-status ${formStatus.type}`} role="status">{formStatus.message}</p>
@@ -713,7 +845,7 @@ function ContactPage() {
   );
 }
 
-function PageHero({ label, title, text, image }) {
+function PageHero({ label, title, text, image, visual }) {
   return (
     <section className="hero page-hero">
       <div className="hero-copy">
@@ -725,9 +857,19 @@ function PageHero({ label, title, text, image }) {
         </div>
       </div>
       <div className="page-hero-visual">
-        <img src={img(image)} alt={title} />
+        {visual || <img src={img(image)} alt={title} />}
       </div>
     </section>
+  );
+}
+
+function ContactHeroVisual() {
+  return (
+    <div className="contact-hero-visual" aria-label="BUYDASH test interface products">
+      <img className="contact-hero-probe" src={img("probe-card.png")} alt="Probe card" />
+      <img className="contact-hero-socket" src={img("burn-in-socket.png")} alt="Burn-in socket" />
+      <img className="contact-hero-controller" src={img("temperature-controller.png")} alt="Temperature controller" />
+    </div>
   );
 }
 
