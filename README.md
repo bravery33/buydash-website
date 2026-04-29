@@ -59,6 +59,23 @@ Output Directory: dist
 
 The `vercel.json` file is included so direct visits to routes such as `/probe-cards`, `/burn-in-sockets`, `/htol-hast-boards`, `/temperature-controllers`, and `/contact` resolve to the React app instead of returning a 404.
 
+## Email Environment Variables
+
+The contact form sends email from a server-side Vercel API route at `api/contact.js`. Do not place SMTP credentials in client-side code.
+
+Set these environment variables in Vercel Project Settings:
+
+```text
+SMTP_HOST=smtppro.zoho.com
+SMTP_PORT=465
+SMTP_SECURE=true
+SMTP_USER=sales@buydash.co.kr
+SMTP_PASS=your-zoho-smtp-password
+CONTACT_TO_EMAIL=sales@buydash.co.kr
+```
+
+For local API testing, create a `.env.local` file with the same variables. `.env` files are ignored by Git.
+
 To deploy with the Vercel CLI:
 
 ```bash
@@ -159,15 +176,10 @@ To update the public contact email, search for:
 CONTACT_EMAIL
 ```
 
-To update the external request form URL, search for:
-
-```text
-TALLY_FORM_URL
-```
-
 ## Notes
 
 - No external CDN dependencies are used.
+- The contact form is submitted to the server-side `/api/contact` endpoint and sent through SMTP.
 - Product copy is written in English.
 - BUYDASH is described as a solutions partner, supply partner and technical sourcing partner, not as a manufacturer.
 - Testrong company branding, slogans and company information are not used in site copy.

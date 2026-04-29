@@ -20,11 +20,27 @@ import {
 import { useEffect, useMemo, useState } from "react";
 
 const img = (name) => `/images/${name}`;
-const TALLY_FORM_URL = "https://tally.so/r/BzLWGQ";
 const CONTACT_EMAIL = "sales@buydash.co.kr";
-const externalFormProps = {
-  target: "_blank",
-  rel: "noopener noreferrer",
+const CONTACT_SUCCESS_MESSAGE = "Thank you. Your request has been submitted successfully. BUYDASH will review your requirements and contact you shortly.";
+const CONTACT_ERROR_MESSAGE = "Sorry, your request could not be sent. Please email sales@buydash.co.kr directly.";
+
+const initialContactForm = {
+  name: "",
+  company: "",
+  email: "",
+  country: "",
+  productType: "",
+  testPlatform: "",
+  packageSize: "",
+  pitch: "",
+  channelCount: "",
+  dpsHvAnalogRequirements: "",
+  temperatureRange: "",
+  siteCount: "",
+  expectedQuantity: "",
+  targetApplication: "",
+  message: "",
+  website: "",
 };
 
 const navProducts = [
@@ -325,7 +341,7 @@ function HomePage() {
           <p className="hero-text">BUYDASH supplies probe cards, burn-in sockets, HTOL/HAST boards and temperature control systems for semiconductor test and reliability applications.</p>
           <div className="hero-actions">
             <a className="primary-btn" href="#products">View Products <ArrowRight size={17} /></a>
-            <a className="secondary-btn" href={TALLY_FORM_URL} {...externalFormProps}>Request a Quote</a>
+            <a className="secondary-btn" href="/contact">Request a Quote</a>
           </div>
           <div className="hero-metrics">
             <Metric value="Up to 2304" label="Digital Channels" />
@@ -568,7 +584,56 @@ function TemperatureControllersPage() {
 }
 
 function ContactPage() {
-  const fields = ["Name", "Company", "Email", "Country", "Test Platform", "Package Size", "Pitch", "Channel Count", "DPS / HV / Analog Requirements", "Temperature Range", "Site Count", "Expected Quantity", "Target Application"];
+  const [formData, setFormData] = useState(initialContactForm);
+  const [formStatus, setFormStatus] = useState({ type: "", message: "" });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const updateField = (event) => {
+    const { name, value } = event.target;
+    setFormData((current) => ({ ...current, [name]: value }));
+  };
+
+  const submitForm = async (event) => {
+    event.preventDefault();
+    setIsSubmitting(true);
+    setFormStatus({ type: "", message: "" });
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Request failed");
+      }
+
+      setFormData(initialContactForm);
+      setFormStatus({ type: "success", message: CONTACT_SUCCESS_MESSAGE });
+    } catch (error) {
+      setFormStatus({ type: "error", message: CONTACT_ERROR_MESSAGE });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const inputFields = [
+    { label: "Name", name: "name", required: true },
+    { label: "Company", name: "company", required: true },
+    { label: "Email", name: "email", type: "email", required: true },
+    { label: "Country", name: "country" },
+    { label: "Test Platform", name: "testPlatform" },
+    { label: "Package Size", name: "packageSize" },
+    { label: "Pitch", name: "pitch" },
+    { label: "Channel Count", name: "channelCount" },
+    { label: "DPS / HV / Analog Requirements", name: "dpsHvAnalogRequirements" },
+    { label: "Temperature Range", name: "temperatureRange" },
+    { label: "Site Count", name: "siteCount" },
+    { label: "Expected Quantity", name: "expectedQuantity" },
+    { label: "Target Application", name: "targetApplication" },
+  ];
+
   return (
     <>
       <PageHero
@@ -578,34 +643,60 @@ function ContactPage() {
         image="probe-pins.png"
       />
       <section className="section contact-section">
-        <form className="quote-form">
+        <form className="quote-form" onSubmit={submitForm}>
           <div className="form-intro full">
             <p className="eyebrow">Technical Request Form</p>
             <h2>Share your test requirements through the request form</h2>
             <p>Use the request form to submit package details, pitch, platform, channel count, DPS/HV needs, temperature range, site count and application goals. The BUYDASH team will review the information and follow up by email.</p>
           </div>
-          {fields.map((field) => (
-            <label key={field}>
-              <span>{field}</span>
-              <input type={field === "Email" ? "email" : "text"} placeholder={field} />
+          <label className="honeypot" aria-hidden="true">
+            <span>Website</span>
+            <input
+              type="text"
+              name="website"
+              value={formData.website}
+              onChange={updateField}
+              tabIndex="-1"
+              autoComplete="off"
+            />
+          </label>
+          {inputFields.map((field) => (
+            <label key={field.name}>
+              <span>{field.label}{field.required ? " *" : ""}</span>
+              <input
+                type={field.type || "text"}
+                name={field.name}
+                value={formData[field.name]}
+                onChange={updateField}
+                placeholder={field.label}
+                required={field.required}
+              />
             </label>
           ))}
           <label>
-            <span>Product Type</span>
-            <select defaultValue="">
+            <span>Product Type *</span>
+            <select name="productType" value={formData.productType} onChange={updateField} required>
               <option value="" disabled>Select product type</option>
               {["Probe Card", "Burn-in Socket", "HTOL / HAST Board", "Temperature Controller", "Probe Pins", "Custom Solution"].map((type) => <option key={type}>{type}</option>)}
             </select>
           </label>
           <label className="full">
-            <span>Message</span>
-            <textarea rows="6" placeholder="Share test conditions, package details, target schedule and any special requirements." />
+            <span>Message *</span>
+            <textarea
+              name="message"
+              value={formData.message}
+              onChange={updateField}
+              rows="6"
+              placeholder="Share test conditions, package details, target schedule and any special requirements."
+              required
+            />
           </label>
-          <label className="full upload-box">
-            <span>Attachment upload placeholder</span>
-            <input type="file" />
-          </label>
-          <a className="primary-btn form-submit" href={TALLY_FORM_URL} {...externalFormProps}>Submit Request <ArrowRight size={17} /></a>
+          {formStatus.message ? (
+            <p className={`form-status ${formStatus.type}`} role="status">{formStatus.message}</p>
+          ) : null}
+          <button className="primary-btn form-submit" type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Sending..." : "Submit Request"} <ArrowRight size={17} />
+          </button>
         </form>
         <aside className="contact-aside">
           <h2>BUYDASH</h2>
@@ -630,7 +721,7 @@ function PageHero({ label, title, text, image }) {
         <h1>{title}</h1>
         <p className="hero-text">{text}</p>
         <div className="hero-actions">
-          <a className="primary-btn" href={TALLY_FORM_URL} {...externalFormProps}>Request a Quote <ArrowRight size={17} /></a>
+          <a className="primary-btn" href="/contact">Request a Quote <ArrowRight size={17} /></a>
         </div>
       </div>
       <div className="page-hero-visual">
@@ -705,7 +796,7 @@ function Cta({ title, text }) {
         <h2>{title}</h2>
         <p>{text}</p>
       </div>
-      <a className="primary-btn" href={TALLY_FORM_URL} {...externalFormProps}>Request a Quote <ArrowRight size={17} /></a>
+      <a className="primary-btn" href="/contact">Request a Quote <ArrowRight size={17} /></a>
     </section>
   );
 }

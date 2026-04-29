@@ -745,6 +745,40 @@ textarea {
   grid-column: 1 / -1;
 }
 
+.honeypot {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.form-status {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 14px 16px;
+  border-radius: 6px;
+  font-weight: 800;
+  line-height: 1.5;
+}
+
+.form-status.success {
+  color: #0f5132;
+  background: #dff5e7;
+  border: 1px solid #a7dfbc;
+}
+
+.form-status.error {
+  color: #842029;
+  background: #f8d7da;
+  border: 1px solid #f1aeb5;
+}
+
+.form-submit:disabled {
+  cursor: wait;
+  opacity: 0.72;
+}
+
 .upload-box input {
   padding: 18px;
   border-style: dashed;
