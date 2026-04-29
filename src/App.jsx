@@ -1279,8 +1279,8 @@ function ContactPage({ lang, t }) {
         label={t.contact.label}
         title={t.contact.title}
         text={t.contact.text}
-        image="probe-card.png"
         showAction={false}
+        hideVisual
       />
       <section className="section contact-section">
         <form className="quote-form" onSubmit={submitForm} noValidate>
@@ -1379,9 +1379,9 @@ function ContactPage({ lang, t }) {
   );
 }
 
-function PageHero({ lang = "en", t = copy.en, label, title, text, image, visual, showAction = true }) {
+function PageHero({ lang = "en", t = copy.en, label, title, text, image, visual, showAction = true, hideVisual = false }) {
   return (
-    <section className="hero page-hero">
+    <section className={hideVisual ? "hero page-hero no-visual" : "hero page-hero"}>
       <div className="hero-copy">
         <p className="eyebrow">{label}</p>
         <h1>{title}</h1>
@@ -1392,9 +1392,11 @@ function PageHero({ lang = "en", t = copy.en, label, title, text, image, visual,
           </div>
         ) : null}
       </div>
-      <div className="page-hero-visual">
-        {visual || <img src={img(image)} alt={title} />}
-      </div>
+      {hideVisual ? null : (
+        <div className="page-hero-visual">
+          {visual || <img src={img(image)} alt={title} />}
+        </div>
+      )}
     </section>
   );
 }
