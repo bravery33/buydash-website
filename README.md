@@ -100,7 +100,8 @@ Current image files:
 | --- | --- | --- |
 | `logo-buydash.png` | Optional logo asset, not required by layout | 560 x 150 px transparent PNG |
 | `homepage-mockup.png` | Reference asset only | Keep original reference image |
-| `hero-interface-system.svg` | Home hero abstract interface visual | Wide generated/abstract semiconductor interface visual, 1400 x 920 px or similar |
+| `hero-interface-system.png` | Home hero generated product-style interface visual | Wide product-style semiconductor interface visual, 16:10 aspect ratio |
+| `hero-interface-system.svg` | Previous abstract hero visual, currently not used | Optional fallback asset |
 | `hero-probe-card.png` | Probe Cards hero | 5:4 light-background product crop, 900 x 720 px |
 | `hero-burnin-socket.png` | Burn-in Sockets hero | 5:4 light-background product crop, 900 x 720 px |
 | `hero-htol-board.png` | HTOL / HAST Boards hero | Wide light-background board crop, 1100 x 720 px |

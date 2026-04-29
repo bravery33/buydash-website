@@ -957,8 +957,8 @@ function HomePage({ lang, t }) {
             <div className="stage-label">Interface system stack</div>
             <img
               className="generated-interface-visual"
-              src={img("hero-interface-system.svg")}
-              alt="Abstract semiconductor test interface visual"
+              src={img("hero-interface-system.png")}
+              alt="Semiconductor test interface product visual"
             />
           </div>
         </div>
