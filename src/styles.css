@@ -414,9 +414,9 @@ h3 {
   right: 0;
   bottom: 0;
   left: 0;
-  height: 360px;
+  height: 480px;
   pointer-events: none;
-  background: linear-gradient(180deg, rgba(15, 34, 54, 0), rgba(35, 68, 96, 0.58) 50%, #eaf1f7 100%);
+  background: linear-gradient(180deg, rgba(15, 34, 54, 0), rgba(45, 78, 105, 0.64) 42%, #9eb4c6 76%, #cfdce7 100%);
 }
 
 .home-hero-grid {
@@ -604,7 +604,7 @@ h3 {
 .home-product-system {
   position: relative;
   background:
-    linear-gradient(180deg, #eaf1f7 0%, #f4f8fb 36%, #f7fafc 70%, #eaf1f7 100%);
+    linear-gradient(180deg, #cfdce7 0%, #dce8f2 24%, #eef4f9 58%, #f7fafc 100%);
   padding-top: clamp(110px, 12vw, 180px);
 }
 
@@ -616,7 +616,7 @@ h3 {
   left: 0;
   height: clamp(180px, 22vw, 320px);
   pointer-events: none;
-  background: linear-gradient(180deg, #153756 0%, #42647f 24%, #9eb4c6 56%, rgba(234, 241, 247, 0) 100%);
+  background: linear-gradient(180deg, rgba(207, 220, 231, 0.95) 0%, rgba(220, 232, 242, 0.72) 45%, rgba(238, 244, 249, 0) 100%);
 }
 
 .home-product-system > * {
