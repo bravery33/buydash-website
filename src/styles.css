@@ -157,6 +157,29 @@ img {
   background: var(--soft);
 }
 
+.language-switcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fff;
+}
+
+.language-switcher a {
+  padding: 6px 8px;
+  border-radius: 4px;
+  color: var(--muted);
+  font-size: 0.75rem;
+  line-height: 1;
+}
+
+.language-switcher a.active {
+  color: #fff;
+  background: var(--blue);
+}
+
 .quote-btn,
 .primary-btn,
 .secondary-btn {
@@ -502,38 +525,6 @@ h3 {
   max-height: 360px;
   object-fit: contain;
   filter: drop-shadow(0 28px 36px rgba(0, 0, 0, 0.42));
-}
-
-.contact-hero-visual {
-  position: relative;
-  width: min(520px, 100%);
-  min-height: 380px;
-}
-
-.contact-hero-visual img {
-  position: absolute;
-  object-fit: contain;
-  filter: drop-shadow(0 24px 30px rgba(0, 0, 0, 0.42));
-}
-
-.contact-hero-probe {
-  left: 0;
-  top: 8%;
-  width: 58%;
-}
-
-.contact-hero-socket {
-  right: 4%;
-  top: 12%;
-  width: 34%;
-  max-height: 230px;
-}
-
-.contact-hero-controller {
-  right: 15%;
-  bottom: 2%;
-  width: 42%;
-  max-height: 260px;
 }
 
 .split-section {
@@ -1075,10 +1066,6 @@ textarea {
 
   .page-hero-visual {
     min-height: 260px;
-  }
-
-  .contact-hero-visual {
-    min-height: 300px;
   }
 
   table {

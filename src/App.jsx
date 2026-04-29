@@ -21,43 +21,446 @@ import { useEffect, useMemo, useState } from "react";
 
 const img = (name) => `/images/${name}`;
 const CONTACT_EMAIL = "sales@buydash.co.kr";
-const CONTACT_SUCCESS_MESSAGE = "Thank you. Your request has been submitted successfully. BUYDASH will review your requirements and contact you shortly.";
-const CONTACT_ERROR_MESSAGE = "Sorry, your request could not be sent. Please email sales@buydash.co.kr directly.";
 const CANONICAL_DOMAIN = "https://www.buydash.co.kr";
+const supportedLangs = ["en", "ko", "zh"];
+const languageLabels = { en: "EN", ko: "KR", zh: "CN" };
 
 const pageMeta = {
-  "/": {
-    title: "BUYDASH | Semiconductor Test Interface Solutions",
-    description: "BUYDASH supplies probe cards, burn-in sockets, HTOL/HAST boards and temperature control systems for semiconductor test and reliability applications.",
+  en: {
+    "/": {
+      title: "BUYDASH | Semiconductor Test Interface Solutions",
+      description: "BUYDASH supplies probe cards, burn-in sockets, HTOL/HAST boards and temperature control systems for semiconductor test and reliability applications.",
+    },
+    "/probe-cards": {
+      title: "Probe Card Solutions | BUYDASH",
+      description: "Custom probe card configurations for V93000, Magnum2, Astar/S200, J750/J750HD, 3380/3360, S100, D10, V50 and T5830 wafer test platforms.",
+    },
+    "/burn-in-sockets": {
+      title: "Burn-in Socket Solutions | BUYDASH",
+      description: "High-reliability burn-in sockets and probe pins for HTOL, HAST and high-temperature semiconductor reliability test environments.",
+    },
+    "/htol-hast-boards": {
+      title: "HTOL / HAST Burn-in Boards | BUYDASH",
+      description: "Custom HTOL and HAST burn-in boards, independent temperature-control HTOL boards and mother-daughter board configurations for reliability testing.",
+    },
+    "/temperature-controllers": {
+      title: "6-Channel Temperature Controller | BUYDASH",
+      description: "Independent PID temperature control system for burn-in boards, socket heating setups and semiconductor reliability test applications.",
+    },
+    "/contact": {
+      title: "Contact BUYDASH | Request Semiconductor Test Interface Support",
+      description: "Submit semiconductor test interface requirements to BUYDASH for probe cards, burn-in sockets, HTOL/HAST boards, temperature controllers and probe pins.",
+    },
   },
-  "/probe-cards": {
-    title: "Probe Card Solutions | BUYDASH",
-    description: "Custom probe card configurations for V93000, Magnum2, Astar/S200, J750/J750HD, 3380/3360, S100, D10, V50 and T5830 wafer test platforms.",
+  ko: {
+    "/": {
+      title: "BUYDASH | 반도체 테스트 인터페이스 솔루션",
+      description: "BUYDASH는 반도체 테스트와 신뢰성 평가를 위한 프로브 카드, 번인 소켓, HTOL/HAST 보드, 온도 제어 시스템을 공급하는 테스트 인터페이스 솔루션 파트너입니다.",
+    },
+    "/probe-cards": {
+      title: "프로브 카드 솔루션 | BUYDASH",
+      description: "V93000, Magnum2, Astar/S200, J750/J750HD, 3380/3360, S100, D10, V50, T5830 플랫폼을 위한 맞춤형 프로브 카드 구성을 지원합니다.",
+    },
+    "/burn-in-sockets": {
+      title: "번인 소켓 솔루션 | BUYDASH",
+      description: "HTOL, HAST 및 고온 반도체 신뢰성 시험 환경을 위한 고신뢰성 번인 소켓과 프로브 핀을 지원합니다.",
+    },
+    "/htol-hast-boards": {
+      title: "HTOL / HAST 번인 보드 | BUYDASH",
+      description: "신뢰성 시험을 위한 HTOL 보드, 독립 온도 제어 HTOL 보드, HAST 보드 및 Mother-Daughter 보드 구성을 지원합니다.",
+    },
+    "/temperature-controllers": {
+      title: "6채널 온도 컨트롤러 | BUYDASH",
+      description: "번인 보드, 소켓 히팅 구성 및 반도체 신뢰성 시험을 위한 독립 PID 온도 제어 시스템입니다.",
+    },
+    "/contact": {
+      title: "BUYDASH 문의 | 반도체 테스트 인터페이스 상담",
+      description: "프로브 카드, 번인 소켓, HTOL/HAST 보드, 온도 컨트롤러, 프로브 핀 관련 기술 요구사항을 BUYDASH에 문의하세요.",
+    },
   },
-  "/burn-in-sockets": {
-    title: "Burn-in Socket Solutions | BUYDASH",
-    description: "High-reliability burn-in sockets and probe pins for HTOL, HAST and high-temperature semiconductor reliability test environments.",
-  },
-  "/htol-hast-boards": {
-    title: "HTOL / HAST Burn-in Boards | BUYDASH",
-    description: "Custom HTOL and HAST burn-in boards, independent temperature-control HTOL boards and mother-daughter board configurations for reliability testing.",
-  },
-  "/temperature-controllers": {
-    title: "6-Channel Temperature Controller | BUYDASH",
-    description: "Independent PID temperature control system for burn-in boards, socket heating setups and semiconductor reliability test applications.",
-  },
-  "/contact": {
-    title: "Contact BUYDASH | Request Semiconductor Test Interface Support",
-    description: "Submit semiconductor test interface requirements to BUYDASH for probe cards, burn-in sockets, HTOL/HAST boards, temperature controllers and probe pins.",
+  zh: {
+    "/": {
+      title: "BUYDASH | 半导体测试接口解决方案",
+      description: "BUYDASH 是半导体测试接口解决方案伙伴，供应探针卡、老化测试座、HTOL/HAST 板卡和温度控制系统。",
+    },
+    "/probe-cards": {
+      title: "探针卡解决方案 | BUYDASH",
+      description: "支持 V93000、Magnum2、Astar/S200、J750/J750HD、3380/3360、S100、D10、V50、T5830 等平台的定制探针卡配置。",
+    },
+    "/burn-in-sockets": {
+      title: "老化测试座解决方案 | BUYDASH",
+      description: "面向 HTOL、HAST 和高温半导体可靠性测试环境的高可靠性老化测试座和探针。",
+    },
+    "/htol-hast-boards": {
+      title: "HTOL / HAST 老化板 | BUYDASH",
+      description: "面向可靠性测试的 HTOL 板、独立温控 HTOL 板、HAST 板和母子板配置。",
+    },
+    "/temperature-controllers": {
+      title: "6通道温度控制器 | BUYDASH",
+      description: "适用于老化板、测试座加热配置和半导体可靠性测试的独立 PID 温度控制系统。",
+    },
+    "/contact": {
+      title: "联系 BUYDASH | 半导体测试接口咨询",
+      description: "提交探针卡、老化测试座、HTOL/HAST 板、温度控制器和探针相关技术需求。",
+    },
   },
 };
 
-const requiredMessages = {
-  name: "Name is required.",
-  company: "Company is required.",
-  email: "Email is required.",
-  productType: "Product Type is required.",
-  message: "Message is required.",
+const copy = {
+  en: {
+    brandSubtitle: "Semiconductor Test Interfaces",
+    nav: { home: "Home", probeCards: "Probe Cards", burnInSolutions: "Burn-in Solutions", applications: "Applications", about: "About", contact: "Contact" },
+    navProducts: ["Burn-in Sockets", "HTOL / HAST Boards", "Temperature Controllers"],
+    requestQuote: "Request a Quote",
+    viewProducts: "View Products",
+    viewMore: "View More",
+    home: {
+      eyebrow: "BUYDASH Semiconductor Test Interfaces",
+      title: "Probe Card & Burn-in Test Interface Solutions",
+      text: "BUYDASH supplies probe cards, burn-in sockets, HTOL/HAST boards and temperature control systems for semiconductor test and reliability applications.",
+      metrics: [["Up to 2304", "Digital Channels"], ["-55°C to 150°C", "Temperature Range"], ["HTOL / HAST", "Reliability Solutions"]],
+      productLabel: "Product Portfolio",
+      productTitle: "Configurable test interface supply for wafer test and reliability programs",
+      applicationsTitle: "Applications",
+      applicationsText: "BUYDASH supports interface configurations for wafer probe, burn-in, reliability stress testing and validation workflows.",
+      whyLabel: "Why Choose Buydash",
+      whyTitle: "Technical sourcing support built around your test application",
+      ctaTitle: "Need a custom probe card or burn-in solution?",
+      ctaText: "Send us your test requirements and our team will help identify the right configuration for your application.",
+    },
+    portfolio: [
+      ["Probe Cards", "Custom wafer test interface solutions."],
+      ["Burn-in Sockets", "Reliable sockets for HTOL and HAST."],
+      ["HTOL / HAST Boards", "Custom burn-in boards for reliability testing."],
+      ["Temperature Controllers", "Independent multi-channel control."],
+      ["Probe Pins", "Precision contact components for test interfaces."],
+    ],
+    applications: ["Wafer Probe Test", "HTOL Reliability Test", "HAST Stress Test", "Product Validation"],
+    reasons: [
+      ["Application-Focused Configuration", "We tailor test interface solutions to match your application and test goals."],
+      ["Custom Test Interface Solutions", "Custom probe cards, sockets, boards and control systems built to your specifications."],
+      ["Reliable Product Quality", "High-quality materials and strict quality control ensure consistent performance."],
+      ["Engineering Coordination", "Our engineering team works closely with you from design to deployment."],
+      ["Flexible Supply Support", "Global supply support with responsive communication and on-time delivery."],
+    ],
+    probe: {
+      label: "Probe Cards",
+      title: "Probe Card Solutions",
+      text: "Custom probe card configurations for semiconductor wafer test platforms, supporting high-density digital channels, DPS/HV resources, custom dimensions and platform-specific interface requirements.",
+      overviewLabel: "Overview",
+      overviewTitle: "Platform-specific probe card configurations",
+      overviewText: "BUYDASH supports probe card configurations for major wafer test platforms including V93000, Magnum2, Astar/S200, J750/J750HD, 3380/3360 series, S100-7D, D10-HDVI, V50 and T5830.",
+      modelLabel: "Model Groups",
+      modelTitle: "Probe cards grouped by platform",
+      specLabel: "Specifications",
+      specTitle: "Probe card specification matrix",
+      applications: ["Wafer probe test", "High-density digital test", "Mixed-signal interface", "Platform conversion projects"],
+      ctaTitle: "Need a probe card for a specific test platform?",
+      ctaText: "Send your platform, channel count, DPS/HV requirements, window size and application details.",
+    },
+    sockets: {
+      label: "Burn-in Sockets",
+      title: "Burn-in Socket Solutions",
+      text: "High-reliability burn-in sockets for HTOL, HAST and high-temperature semiconductor reliability test environments.",
+      specLabel: "Mechanical & Electrical",
+      specTitle: "Core socket characteristics",
+      typeLabel: "Socket Types",
+      typeTitle: "Configurable socket structures for reliability test",
+      pinsLabel: "Contact Components",
+      pinsTitle: "Probe Pins",
+      pinsText: "Precision contact components used in burn-in socket and test interface applications, supporting stable electrical contact and long operating lifetime.",
+      applications: ["HTOL socket programs", "HAST stress testing", "High-temperature validation", "Multi-site burn-in boards"],
+      ctaTitle: "Need a burn-in socket configuration?",
+      ctaText: "Send package size, pitch, temperature target, site count and reliability test conditions.",
+    },
+    boards: {
+      label: "HTOL / HAST Boards",
+      title: "HTOL / HAST Burn-in Boards",
+      text: "Custom burn-in boards for high-temperature operating life tests and highly accelerated stress test environments.",
+      familyLabel: "Board Families",
+      familyTitle: "Reliability board configurations",
+      familyText: "Custom board layout, socket arrangement and material stack-up can be configured by package and test condition.",
+      imageLabel: "Product Images",
+      imageTitle: "Board examples from reliability test applications",
+      specLabel: "Specifications",
+      specTitle: "HTOL and HAST board specification table",
+      applications: ["High-temperature operating life", "Highly accelerated stress test", "Independent temperature control", "Mother-daughter board setups"],
+      ctaTitle: "Need a custom HTOL or HAST board?",
+      ctaText: "Send package, pitch, site count, board size limits, socket type and chamber or platform requirements.",
+    },
+    controller: {
+      label: "Temperature Controllers",
+      title: "6-Channel Temperature Controller",
+      text: "Independent PID temperature control system for burn-in and semiconductor reliability test setups.",
+      featureLabel: "Key Features",
+      featureTitle: "Independent multi-channel control",
+      features: ["6-channel independent control", "PID temperature adjustment", "PT100 or K-type thermocouple input", "RS485 / MODBUS RTU communication", "Monitoring software support", "Suitable for burn-in and reliability test setups"],
+      specLabel: "Technical Specifications",
+      specTitle: "Controller specification table",
+      applications: ["Socket heating setups", "Independent HTOL boards", "Reliability lab fixtures", "Temperature validation workflows"],
+      ctaTitle: "Need temperature control for a burn-in setup?",
+      ctaText: "Send channel count, input sensor type, power requirements, temperature range and board configuration.",
+    },
+    contact: {
+      label: "Request a Quote",
+      title: "Contact BUYDASH",
+      text: "Submit your technical requirements through the request form. BUYDASH will review your application and help identify the right configuration.",
+      formLabel: "Technical Request Form",
+      formTitle: "Share your test requirements through the request form",
+      formText: "Use the request form to submit package details, pitch, platform, channel count, DPS/HV needs, temperature range, site count and application goals. The BUYDASH team will review the information and follow up by email.",
+      note: "For drawings or technical documents, please mention them in the message. Our team will follow up by email.",
+      submit: "Submit Request",
+      sending: "Sending...",
+      success: "Thank you. Your request has been submitted successfully. BUYDASH will review your requirements and contact you shortly.",
+      error: "Sorry, your request could not be sent. Please email sales@buydash.co.kr directly.",
+      fields: {
+        name: "Name", company: "Company", email: "Email", country: "Country", productType: "Product Type", targetApplication: "Target Application", testPlatform: "Test Platform", packageSize: "Package Size", pitch: "Pitch", channelCount: "Channel Count", dpsHvAnalogRequirements: "DPS / HV / Analog Requirements", temperatureRange: "Temperature Range", siteCount: "Site Count", expectedQuantity: "Expected Quantity", message: "Message",
+      },
+      validation: {
+        name: "Name is required.", company: "Company is required.", email: "Email is required.", invalidEmail: "Please enter a valid email address.", productType: "Product Type is required.", message: "Message is required.",
+      },
+      productOptions: ["Probe Card", "Burn-in Socket", "HTOL / HAST Board", "Temperature Controller", "Probe Pins", "Custom Solution"],
+      productPlaceholder: "Select product type",
+      messagePlaceholder: "Share test conditions, package details, target schedule and any special requirements.",
+    },
+    footer: { business: "Business Registration No.", mailOrder: "Mail-order Business Registration No.", location: "Location" },
+  },
+  ko: {
+    brandSubtitle: "반도체 테스트 인터페이스",
+    nav: { home: "홈", probeCards: "프로브 카드", burnInSolutions: "번인 솔루션", applications: "적용 분야", about: "소개", contact: "문의" },
+    navProducts: ["번인 소켓", "HTOL / HAST 보드", "온도 컨트롤러"],
+    requestQuote: "견적 문의",
+    viewProducts: "제품 보기",
+    viewMore: "자세히 보기",
+    home: {
+      eyebrow: "BUYDASH 반도체 테스트 인터페이스",
+      title: "Probe Card & Burn-in Test Interface Solutions",
+      text: "BUYDASH는 반도체 테스트와 신뢰성 평가를 위한 프로브 카드, 번인 소켓, HTOL/HAST 보드, 온도 제어 시스템을 공급합니다.",
+      metrics: [["최대 2304", "Digital Channels"], ["-55°C to 150°C", "Temperature Range"], ["HTOL / HAST", "Reliability Solutions"]],
+      productLabel: "제품 포트폴리오",
+      productTitle: "웨이퍼 테스트와 신뢰성 평가를 위한 구성형 테스트 인터페이스 공급",
+      applicationsTitle: "적용 분야",
+      applicationsText: "BUYDASH는 웨이퍼 프로브, 번인, 신뢰성 스트레스 테스트, 제품 검증을 위한 인터페이스 구성을 지원합니다.",
+      whyLabel: "BUYDASH를 선택하는 이유",
+      whyTitle: "테스트 애플리케이션 중심의 기술 소싱 지원",
+      ctaTitle: "맞춤형 프로브 카드 또는 번인 솔루션이 필요하신가요?",
+      ctaText: "테스트 요구사항을 보내주시면 BUYDASH 팀이 애플리케이션에 맞는 구성을 검토해 드립니다.",
+    },
+    portfolio: [
+      ["프로브 카드", "맞춤형 웨이퍼 테스트 인터페이스 솔루션."],
+      ["번인 소켓", "HTOL 및 HAST를 위한 신뢰성 높은 소켓."],
+      ["HTOL / HAST 보드", "신뢰성 시험을 위한 맞춤형 번인 보드."],
+      ["온도 컨트롤러", "독립 다채널 제어."],
+      ["프로브 핀", "테스트 인터페이스용 정밀 접촉 부품."],
+    ],
+    applications: ["Wafer Probe Test", "HTOL Reliability Test", "HAST Stress Test", "Product Validation"],
+    reasons: [
+      ["애플리케이션 중심 구성", "테스트 목표와 애플리케이션에 맞춰 테스트 인터페이스 솔루션을 조정합니다."],
+      ["맞춤형 테스트 인터페이스 솔루션", "사양에 맞춘 프로브 카드, 소켓, 보드, 제어 시스템 구성을 지원합니다."],
+      ["신뢰성 있는 제품 품질", "고품질 소재와 엄격한 품질 관리를 통해 일관된 성능을 지원합니다."],
+      ["엔지니어링 코디네이션", "설계부터 적용까지 고객과 긴밀히 협업합니다."],
+      ["유연한 공급 지원", "신속한 커뮤니케이션과 납기 중심의 글로벌 공급 지원을 제공합니다."],
+    ],
+    probe: {
+      label: "프로브 카드",
+      title: "프로브 카드 솔루션",
+      text: "고밀도 Digital Channel, DPS/HV 리소스, 맞춤형 치수, 플랫폼별 인터페이스 요구사항을 지원하는 반도체 웨이퍼 테스트용 프로브 카드 구성입니다.",
+      overviewLabel: "개요",
+      overviewTitle: "플랫폼별 프로브 카드 구성",
+      overviewText: "BUYDASH는 V93000, Magnum2, Astar/S200, J750/J750HD, 3380/3360 series, S100-7D, D10-HDVI, V50, T5830 등 주요 웨이퍼 테스트 플랫폼용 프로브 카드 구성을 지원합니다.",
+      modelLabel: "모델 그룹",
+      modelTitle: "플랫폼별 프로브 카드",
+      specLabel: "사양",
+      specTitle: "프로브 카드 사양 매트릭스",
+      applications: ["Wafer probe test", "High-density digital test", "Mixed-signal interface", "Platform conversion projects"],
+      ctaTitle: "특정 테스트 플랫폼용 프로브 카드가 필요하신가요?",
+      ctaText: "플랫폼, 채널 수, DPS/HV 요구사항, 윈도우 사이즈, 애플리케이션 정보를 보내주세요.",
+    },
+    sockets: {
+      label: "번인 소켓",
+      title: "번인 소켓 솔루션",
+      text: "HTOL, HAST 및 고온 반도체 신뢰성 시험 환경을 위한 고신뢰성 번인 소켓입니다.",
+      specLabel: "기계적 / 전기적 특성",
+      specTitle: "핵심 소켓 특성",
+      typeLabel: "소켓 타입",
+      typeTitle: "신뢰성 시험을 위한 구성형 소켓 구조",
+      pinsLabel: "접촉 부품",
+      pinsTitle: "프로브 핀",
+      pinsText: "번인 소켓과 테스트 인터페이스 애플리케이션에 사용되는 정밀 접촉 부품으로 안정적인 전기 접촉과 긴 동작 수명을 지원합니다.",
+      applications: ["HTOL socket programs", "HAST stress testing", "High-temperature validation", "Multi-site burn-in boards"],
+      ctaTitle: "번인 소켓 구성이 필요하신가요?",
+      ctaText: "패키지 크기, 피치, 목표 온도, 사이트 수, 신뢰성 시험 조건을 보내주세요.",
+    },
+    boards: {
+      label: "HTOL / HAST 보드",
+      title: "HTOL / HAST 번인 보드",
+      text: "고온 동작 수명 시험과 고가속 스트레스 시험 환경을 위한 맞춤형 번인 보드입니다.",
+      familyLabel: "보드 제품군",
+      familyTitle: "신뢰성 보드 구성",
+      familyText: "패키지와 시험 조건에 따라 보드 레이아웃, 소켓 배열, 소재 스택업을 구성할 수 있습니다.",
+      imageLabel: "제품 이미지",
+      imageTitle: "신뢰성 시험 애플리케이션 보드 예시",
+      specLabel: "사양",
+      specTitle: "HTOL 및 HAST 보드 사양표",
+      applications: ["High-temperature operating life", "Highly accelerated stress test", "Independent temperature control", "Mother-daughter board setups"],
+      ctaTitle: "맞춤형 HTOL 또는 HAST 보드가 필요하신가요?",
+      ctaText: "패키지, 피치, 사이트 수, 보드 크기 제한, 소켓 타입, 챔버 또는 플랫폼 요구사항을 보내주세요.",
+    },
+    controller: {
+      label: "온도 컨트롤러",
+      title: "6채널 온도 컨트롤러",
+      text: "번인 및 반도체 신뢰성 시험 구성을 위한 독립 PID 온도 제어 시스템입니다.",
+      featureLabel: "주요 기능",
+      featureTitle: "독립 다채널 제어",
+      features: ["6-channel independent control", "PID temperature adjustment", "PT100 or K-type thermocouple input", "RS485 / MODBUS RTU communication", "Monitoring software support", "Suitable for burn-in and reliability test setups"],
+      specLabel: "기술 사양",
+      specTitle: "컨트롤러 사양표",
+      applications: ["Socket heating setups", "Independent HTOL boards", "Reliability lab fixtures", "Temperature validation workflows"],
+      ctaTitle: "번인 구성용 온도 제어가 필요하신가요?",
+      ctaText: "채널 수, 입력 센서 타입, 전원 요구사항, 온도 범위, 보드 구성을 보내주세요.",
+    },
+    contact: {
+      label: "견적 문의",
+      title: "BUYDASH 문의",
+      text: "요청 양식으로 기술 요구사항을 보내주시면 BUYDASH가 애플리케이션에 맞는 구성을 검토합니다.",
+      formLabel: "기술 요청 양식",
+      formTitle: "테스트 요구사항을 요청 양식으로 보내주세요",
+      formText: "패키지, 피치, 플랫폼, 채널 수, DPS/HV 요구사항, 온도 범위, 사이트 수, 애플리케이션 목표를 입력해 주세요. BUYDASH 팀이 검토 후 이메일로 연락드립니다.",
+      note: "도면 또는 기술 문서가 있는 경우 메시지에 언급해 주세요. 담당자가 이메일로 후속 안내를 드립니다.",
+      submit: "문의 보내기",
+      sending: "전송 중...",
+      success: "감사합니다. 요청이 정상적으로 접수되었습니다. BUYDASH가 요구사항을 검토한 뒤 곧 연락드리겠습니다.",
+      error: "죄송합니다. 요청을 전송할 수 없습니다. sales@buydash.co.kr로 직접 이메일을 보내주세요.",
+      fields: {
+        name: "이름", company: "회사명", email: "이메일", country: "국가", productType: "제품 유형", targetApplication: "대상 애플리케이션", testPlatform: "테스트 플랫폼", packageSize: "패키지 크기", pitch: "피치", channelCount: "채널 수", dpsHvAnalogRequirements: "DPS / HV / Analog 요구사항", temperatureRange: "온도 범위", siteCount: "사이트 수", expectedQuantity: "예상 수량", message: "메시지",
+      },
+      validation: {
+        name: "이름을 입력해 주세요.", company: "회사명을 입력해 주세요.", email: "이메일을 입력해 주세요.", invalidEmail: "올바른 이메일 주소를 입력해 주세요.", productType: "제품 유형을 선택해 주세요.", message: "메시지를 입력해 주세요.",
+      },
+      productOptions: ["Probe Card", "Burn-in Socket", "HTOL / HAST Board", "Temperature Controller", "Probe Pins", "Custom Solution"],
+      productPlaceholder: "제품 유형을 선택하세요",
+      messagePlaceholder: "시험 조건, 패키지 정보, 목표 일정, 특수 요구사항을 입력해 주세요.",
+    },
+    footer: { business: "사업자등록번호", mailOrder: "통신판매업 신고번호", location: "소재지" },
+  },
+  zh: {
+    brandSubtitle: "半导体测试接口",
+    nav: { home: "首页", probeCards: "探针卡", burnInSolutions: "老化解决方案", applications: "应用", about: "关于", contact: "联系" },
+    navProducts: ["老化测试座", "HTOL / HAST 板", "温度控制器"],
+    requestQuote: "提交询价",
+    viewProducts: "查看产品",
+    viewMore: "了解更多",
+    home: {
+      eyebrow: "BUYDASH 半导体测试接口",
+      title: "Probe Card & Burn-in Test Interface Solutions",
+      text: "BUYDASH 供应用于半导体测试和可靠性应用的探针卡、老化测试座、HTOL/HAST 板和温度控制系统。",
+      metrics: [["最高 2304", "Digital Channels"], ["-55°C to 150°C", "Temperature Range"], ["HTOL / HAST", "Reliability Solutions"]],
+      productLabel: "产品组合",
+      productTitle: "面向晶圆测试和可靠性项目的可配置测试接口供应",
+      applicationsTitle: "应用",
+      applicationsText: "BUYDASH 支持晶圆探针测试、老化测试、可靠性应力测试和产品验证流程的接口配置。",
+      whyLabel: "为什么选择 BUYDASH",
+      whyTitle: "围绕测试应用的技术选型支持",
+      ctaTitle: "需要定制探针卡或老化解决方案？",
+      ctaText: "请发送测试需求，BUYDASH 团队将协助确认适合应用的配置。",
+    },
+    portfolio: [
+      ["探针卡", "定制晶圆测试接口解决方案。"],
+      ["老化测试座", "适用于 HTOL 和 HAST 的可靠测试座。"],
+      ["HTOL / HAST 板", "用于可靠性测试的定制老化板。"],
+      ["温度控制器", "独立多通道控制。"],
+      ["探针", "用于测试接口的精密接触部件。"],
+    ],
+    applications: ["Wafer Probe Test", "HTOL Reliability Test", "HAST Stress Test", "Product Validation"],
+    reasons: [
+      ["面向应用的配置", "根据您的应用和测试目标匹配测试接口解决方案。"],
+      ["定制测试接口解决方案", "按规格支持探针卡、测试座、板卡和控制系统配置。"],
+      ["可靠的产品质量", "高质量材料和严格质量控制支持稳定性能。"],
+      ["工程协同", "工程团队从设计到导入与您紧密配合。"],
+      ["灵活供应支持", "提供响应及时、重视交期的全球供应支持。"],
+    ],
+    probe: {
+      label: "探针卡",
+      title: "探针卡解决方案",
+      text: "面向半导体晶圆测试平台的定制探针卡配置，支持高密度 Digital Channel、DPS/HV 资源、定制尺寸和平台接口要求。",
+      overviewLabel: "概述",
+      overviewTitle: "按平台配置的探针卡",
+      overviewText: "BUYDASH 支持 V93000、Magnum2、Astar/S200、J750/J750HD、3380/3360 series、S100-7D、D10-HDVI、V50 和 T5830 等主要晶圆测试平台的探针卡配置。",
+      modelLabel: "型号分组",
+      modelTitle: "按平台分类的探针卡",
+      specLabel: "规格",
+      specTitle: "探针卡规格矩阵",
+      applications: ["Wafer probe test", "High-density digital test", "Mixed-signal interface", "Platform conversion projects"],
+      ctaTitle: "需要特定测试平台的探针卡？",
+      ctaText: "请发送平台、通道数、DPS/HV 要求、窗口尺寸和应用信息。",
+    },
+    sockets: {
+      label: "老化测试座",
+      title: "老化测试座解决方案",
+      text: "面向 HTOL、HAST 和高温半导体可靠性测试环境的高可靠性老化测试座。",
+      specLabel: "机械与电气特性",
+      specTitle: "核心测试座特性",
+      typeLabel: "测试座类型",
+      typeTitle: "用于可靠性测试的可配置测试座结构",
+      pinsLabel: "接触部件",
+      pinsTitle: "探针",
+      pinsText: "用于老化测试座和测试接口应用的精密接触部件，支持稳定电接触和长使用寿命。",
+      applications: ["HTOL socket programs", "HAST stress testing", "High-temperature validation", "Multi-site burn-in boards"],
+      ctaTitle: "需要老化测试座配置？",
+      ctaText: "请发送封装尺寸、Pitch、目标温度、Site 数量和可靠性测试条件。",
+    },
+    boards: {
+      label: "HTOL / HAST 板",
+      title: "HTOL / HAST 老化板",
+      text: "面向高温工作寿命测试和高加速应力测试环境的定制老化板。",
+      familyLabel: "板卡系列",
+      familyTitle: "可靠性板卡配置",
+      familyText: "可根据封装和测试条件配置板卡 layout、测试座排列和材料 stack-up。",
+      imageLabel: "产品图片",
+      imageTitle: "可靠性测试应用板卡示例",
+      specLabel: "规格",
+      specTitle: "HTOL 和 HAST 板规格表",
+      applications: ["High-temperature operating life", "Highly accelerated stress test", "Independent temperature control", "Mother-daughter board setups"],
+      ctaTitle: "需要定制 HTOL 或 HAST 板？",
+      ctaText: "请发送封装、Pitch、Site 数量、板卡尺寸限制、测试座类型以及 chamber 或平台要求。",
+    },
+    controller: {
+      label: "温度控制器",
+      title: "6通道温度控制器",
+      text: "适用于老化和半导体可靠性测试配置的独立 PID 温度控制系统。",
+      featureLabel: "主要功能",
+      featureTitle: "独立多通道控制",
+      features: ["6-channel independent control", "PID temperature adjustment", "PT100 or K-type thermocouple input", "RS485 / MODBUS RTU communication", "Monitoring software support", "Suitable for burn-in and reliability test setups"],
+      specLabel: "技术规格",
+      specTitle: "控制器规格表",
+      applications: ["Socket heating setups", "Independent HTOL boards", "Reliability lab fixtures", "Temperature validation workflows"],
+      ctaTitle: "需要老化测试温度控制？",
+      ctaText: "请发送通道数、输入传感器类型、电源要求、温度范围和板卡配置。",
+    },
+    contact: {
+      label: "提交询价",
+      title: "联系 BUYDASH",
+      text: "请通过请求表提交技术需求。BUYDASH 将评估您的应用并协助确认合适配置。",
+      formLabel: "技术需求表",
+      formTitle: "通过请求表提交您的测试需求",
+      formText: "请提交封装、Pitch、平台、通道数、DPS/HV 需求、温度范围、Site 数量和应用目标。BUYDASH 团队将审核并通过邮件跟进。",
+      note: "如有图纸或技术文件，请在消息中说明。我们的团队将通过邮件跟进。",
+      submit: "提交请求",
+      sending: "发送中...",
+      success: "谢谢。您的请求已成功提交。BUYDASH 将审核您的需求并尽快联系您。",
+      error: "抱歉，您的请求无法发送。请直接发送邮件至 sales@buydash.co.kr。",
+      fields: {
+        name: "姓名", company: "公司", email: "邮箱", country: "国家", productType: "产品类型", targetApplication: "目标应用", testPlatform: "测试平台", packageSize: "封装尺寸", pitch: "Pitch", channelCount: "通道数", dpsHvAnalogRequirements: "DPS / HV / Analog 要求", temperatureRange: "温度范围", siteCount: "Site 数量", expectedQuantity: "预计数量", message: "消息",
+      },
+      validation: {
+        name: "请输入姓名。", company: "请输入公司名称。", email: "请输入邮箱。", invalidEmail: "请输入有效的邮箱地址。", productType: "请选择产品类型。", message: "请输入消息。",
+      },
+      productOptions: ["Probe Card", "Burn-in Socket", "HTOL / HAST Board", "Temperature Controller", "Probe Pins", "Custom Solution"],
+      productPlaceholder: "请选择产品类型",
+      messagePlaceholder: "请填写测试条件、封装信息、目标日程和特殊要求。",
+    },
+    footer: { business: "营业登记号", mailOrder: "通信销售登记号", location: "所在地" },
+  },
 };
 
 const initialContactForm = {
@@ -83,17 +486,23 @@ function isValidEmail(value) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
-function validateContactForm(values) {
+function validateContactForm(values, messages) {
   const errors = {};
 
-  Object.entries(requiredMessages).forEach(([field, message]) => {
+  Object.entries({
+    name: messages.name,
+    company: messages.company,
+    email: messages.email,
+    productType: messages.productType,
+    message: messages.message,
+  }).forEach(([field, message]) => {
     if (!values[field].trim()) {
       errors[field] = message;
     }
   });
 
   if (values.email.trim() && !isValidEmail(values.email.trim())) {
-    errors.email = "Please enter a valid email address.";
+    errors.email = messages.invalidEmail;
   }
 
   return errors;
@@ -114,6 +523,48 @@ function setCanonicalUrl(url) {
     document.head.appendChild(canonical);
   }
   canonical.setAttribute("href", url);
+}
+
+function parseLocalizedPath(pathname) {
+  const segments = pathname.split("/").filter(Boolean);
+  const first = segments[0];
+
+  if (first === "ko" || first === "zh") {
+    return {
+      lang: first,
+      route: segments.length === 1 ? "/" : `/${segments.slice(1).join("/")}`,
+    };
+  }
+
+  return { lang: "en", route: pathname === "" ? "/" : pathname };
+}
+
+function localizePath(lang, route = "/") {
+  const cleanRoute = route === "" ? "/" : route;
+  if (lang === "en") {
+    return cleanRoute;
+  }
+  return cleanRoute === "/" ? `/${lang}` : `/${lang}${cleanRoute}`;
+}
+
+function setHrefLangLinks(route) {
+  document.querySelectorAll("link[data-managed-hreflang]").forEach((node) => node.remove());
+
+  const links = [
+    ["en", `${CANONICAL_DOMAIN}${localizePath("en", route)}`],
+    ["ko", `${CANONICAL_DOMAIN}${localizePath("ko", route)}`],
+    ["zh", `${CANONICAL_DOMAIN}${localizePath("zh", route)}`],
+    ["x-default", `${CANONICAL_DOMAIN}${localizePath("en", route)}`],
+  ];
+
+  links.forEach(([hreflang, href]) => {
+    const link = document.createElement("link");
+    link.setAttribute("rel", "alternate");
+    link.setAttribute("hreflang", hreflang);
+    link.setAttribute("href", href);
+    link.setAttribute("data-managed-hreflang", "true");
+    document.head.appendChild(link);
+  });
 }
 
 const navProducts = [
@@ -317,6 +768,8 @@ const controllerSpecs = [
 
 function App() {
   const [path, setPath] = useState(window.location.pathname);
+  const { lang, route } = parseLocalizedPath(path);
+  const t = copy[lang] || copy.en;
 
   useEffect(() => {
     const update = () => setPath(window.location.pathname);
@@ -333,8 +786,8 @@ function App() {
   }, [path]);
 
   useEffect(() => {
-    const meta = pageMeta[path] || pageMeta["/"];
-    const canonicalUrl = `${CANONICAL_DOMAIN}${path === "/" ? "/" : path}`;
+    const meta = pageMeta[lang]?.[route] || pageMeta.en["/"];
+    const canonicalUrl = `${CANONICAL_DOMAIN}${localizePath(lang, route)}`;
 
     document.title = meta.title;
     setMetaContent('meta[name="description"]', meta.description);
@@ -344,35 +797,37 @@ function App() {
     setMetaContent('meta[name="twitter:title"]', meta.title);
     setMetaContent('meta[name="twitter:description"]', meta.description);
     setCanonicalUrl(canonicalUrl);
-  }, [path]);
+    setHrefLangLinks(route);
+    document.documentElement.lang = lang === "ko" ? "ko" : lang === "zh" ? "zh-Hans" : "en";
+  }, [lang, route]);
 
   const page = useMemo(() => {
-    switch (path) {
+    switch (route) {
       case "/probe-cards":
-        return <ProbeCardsPage />;
+        return <ProbeCardsPage lang={lang} t={t} />;
       case "/burn-in-sockets":
-        return <BurnInSocketsPage />;
+        return <BurnInSocketsPage lang={lang} t={t} />;
       case "/htol-hast-boards":
-        return <BoardsPage />;
+        return <BoardsPage lang={lang} t={t} />;
       case "/temperature-controllers":
-        return <TemperatureControllersPage />;
+        return <TemperatureControllersPage lang={lang} t={t} />;
       case "/contact":
-        return <ContactPage />;
+        return <ContactPage lang={lang} t={t} />;
       default:
-        return <HomePage />;
+        return <HomePage lang={lang} t={t} />;
     }
-  }, [path]);
+  }, [route, lang, t]);
 
   return (
     <>
-      <Header />
+      <Header lang={lang} route={route} t={t} />
       <main>{page}</main>
-      <Footer />
+      <Footer t={t} />
     </>
   );
 }
 
-function Header() {
+function Header({ lang, route, t }) {
   const [open, setOpen] = useState(false);
   const go = (event, href) => {
     if (href.startsWith("/")) {
@@ -393,47 +848,57 @@ function Header() {
         <span className="brand-mark">B</span>
         <span>
           <strong>BUYDASH</strong>
-          <small>Semiconductor Test Interfaces</small>
+          <small>{t.brandSubtitle}</small>
         </span>
       </a>
       <button className="nav-toggle" type="button" aria-label="Open navigation" onClick={() => setOpen(!open)}>
         {open ? <X size={22} /> : <Menu size={22} />}
       </button>
       <nav className={open ? "nav open" : "nav"}>
-        <a href="/" onClick={(e) => go(e, "/")}>Home</a>
-        <a href="/probe-cards" onClick={(e) => go(e, "/probe-cards")}>Probe Cards</a>
+        <a href={localizePath(lang, "/")} onClick={(e) => go(e, localizePath(lang, "/"))}>{t.nav.home}</a>
+        <a href={localizePath(lang, "/probe-cards")} onClick={(e) => go(e, localizePath(lang, "/probe-cards"))}>{t.nav.probeCards}</a>
         <div className="nav-dropdown">
-          <button type="button">Burn-in Solutions <ChevronDown size={15} /></button>
+          <button type="button">{t.nav.burnInSolutions} <ChevronDown size={15} /></button>
           <div className="dropdown-menu">
-            {navProducts.map((item) => (
-              <a key={item.href} href={item.href} onClick={(e) => go(e, item.href)}>{item.label}</a>
+            {navProducts.map((item, index) => (
+              <a key={item.href} href={localizePath(lang, item.href)} onClick={(e) => go(e, localizePath(lang, item.href))}>{t.navProducts[index]}</a>
             ))}
           </div>
         </div>
-        <a href="/#applications" onClick={(e) => go(e, "/#applications")}>Applications</a>
-        <a href="/#about" onClick={(e) => go(e, "/#about")}>About</a>
-        <a href="/contact" onClick={(e) => go(e, "/contact")}>Contact</a>
+        <a href={`${localizePath(lang, "/")}#applications`} onClick={(e) => go(e, `${localizePath(lang, "/")}#applications`)}>{t.nav.applications}</a>
+        <a href={`${localizePath(lang, "/")}#about`} onClick={(e) => go(e, `${localizePath(lang, "/")}#about`)}>{t.nav.about}</a>
+        <a href={localizePath(lang, "/contact")} onClick={(e) => go(e, localizePath(lang, "/contact"))}>{t.nav.contact}</a>
+        <div className="language-switcher" aria-label="Language selector">
+          {supportedLangs.map((code) => (
+            <a
+              key={code}
+              className={code === lang ? "active" : ""}
+              href={localizePath(code, route)}
+              onClick={(e) => go(e, localizePath(code, route))}
+            >
+              {languageLabels[code]}
+            </a>
+          ))}
+        </div>
       </nav>
     </header>
   );
 }
 
-function HomePage() {
+function HomePage({ lang, t }) {
   return (
     <>
       <section className="hero home-hero">
         <div className="hero-copy">
-          <p className="eyebrow">BUYDASH Semiconductor Test Interfaces</p>
-          <h1>Probe Card & Burn-in Test Interface Solutions</h1>
-          <p className="hero-text">BUYDASH supplies probe cards, burn-in sockets, HTOL/HAST boards and temperature control systems for semiconductor test and reliability applications.</p>
+          <p className="eyebrow">{t.home.eyebrow}</p>
+          <h1>{t.home.title}</h1>
+          <p className="hero-text">{t.home.text}</p>
           <div className="hero-actions">
-            <a className="primary-btn" href="#products">View Products <ArrowRight size={17} /></a>
-            <a className="secondary-btn" href="/contact">Request a Quote</a>
+            <a className="primary-btn" href="#products">{t.viewProducts} <ArrowRight size={17} /></a>
+            <a className="secondary-btn" href={localizePath(lang, "/contact")}>{t.requestQuote}</a>
           </div>
           <div className="hero-metrics">
-            <Metric value="Up to 2304" label="Digital Channels" />
-            <Metric value="-55°C to 150°C" label="Temperature Range" />
-            <Metric value="HTOL / HAST" label="Reliability Solutions" />
+            {t.home.metrics.map(([value, label]) => <Metric key={label} value={value} label={label} />)}
           </div>
         </div>
         <div className="hero-collage" aria-label="BUYDASH product collage">
@@ -446,15 +911,15 @@ function HomePage() {
       </section>
 
       <section id="products" className="section">
-        <SectionHeading label="Product Portfolio" title="Configurable test interface supply for wafer test and reliability programs" />
+        <SectionHeading label={t.home.productLabel} title={t.home.productTitle} />
         <div className="portfolio-grid">
-          {portfolio.map((item) => (
-            <a className="product-card" key={item.title} href={item.href}>
+          {portfolio.map((item, index) => (
+            <a className="product-card" key={item.href} href={localizePath(lang, item.href)}>
               <img src={img(item.image)} alt={item.title} />
               <div>
-                <h3>{item.title}</h3>
-                <p>{item.text}</p>
-                <span>View More <ArrowRight size={16} /></span>
+                <h3>{t.portfolio[index][0]}</h3>
+                <p>{t.portfolio[index][1]}</p>
+                <span>{t.viewMore} <ArrowRight size={16} /></span>
               </div>
             </a>
           ))}
@@ -463,84 +928,88 @@ function HomePage() {
 
       <section id="applications" className="section applications-band">
         <div className="applications-intro">
-          <h2>Applications</h2>
-          <p>BUYDASH supports interface configurations for wafer probe, burn-in, reliability stress testing and validation workflows.</p>
+          <h2>{t.home.applicationsTitle}</h2>
+          <p>{t.home.applicationsText}</p>
         </div>
         <div className="application-grid">
           {applications.map(({ title, icon: Icon }) => (
             <article className="application-card" key={title}>
               <Icon size={34} />
-              <h3>{title}</h3>
+              <h3>{t.applications[applications.findIndex((item) => item.title === title)]}</h3>
             </article>
           ))}
         </div>
       </section>
 
       <section id="about" className="section dark-section">
-        <SectionHeading label="Why Choose Buydash" title="Technical sourcing support built around your test application" />
+        <SectionHeading label={t.home.whyLabel} title={t.home.whyTitle} />
         <div className="reason-grid">
-          {reasons.map(({ title, text, icon: Icon }) => (
+          {reasons.map(({ title, icon: Icon }, index) => (
             <article className="reason-card" key={title}>
               <Icon size={30} />
-              <h3>{title}</h3>
-              <p>{text}</p>
+              <h3>{t.reasons[index][0]}</h3>
+              <p>{t.reasons[index][1]}</p>
             </article>
           ))}
         </div>
       </section>
 
-      <Cta title="Need a custom probe card or burn-in solution?" text="Send us your test requirements and our team will help identify the right configuration for your application." />
+      <Cta lang={lang} t={t} title={t.home.ctaTitle} text={t.home.ctaText} />
     </>
   );
 }
 
-function ProbeCardsPage() {
+function ProbeCardsPage({ lang, t }) {
   return (
     <>
       <PageHero
-        label="Probe Cards"
-        title="Probe Card Solutions"
-        text="Custom probe card configurations for semiconductor wafer test platforms, supporting high-density digital channels, DPS/HV resources, custom dimensions and platform-specific interface requirements."
+        lang={lang}
+        t={t}
+        label={t.probe.label}
+        title={t.probe.title}
+        text={t.probe.text}
         image="hero-probe-card.png"
       />
       <section className="section split-section">
         <div>
-          <p className="eyebrow">Overview</p>
-          <h2>Platform-specific probe card configurations</h2>
-          <p>BUYDASH supports probe card configurations for major wafer test platforms including V93000, Magnum2, Astar/S200, J750/J750HD, 3380/3360 series, S100-7D, D10-HDVI, V50 and T5830.</p>
+          <p className="eyebrow">{t.probe.overviewLabel}</p>
+          <h2>{t.probe.overviewTitle}</h2>
+          <p>{t.probe.overviewText}</p>
         </div>
         <img className="feature-image" src={img("probe-card.png")} alt="Probe card detail" />
       </section>
       <section className="section">
-        <SectionHeading label="Model Groups" title="Probe cards grouped by platform" />
+        <SectionHeading label={t.probe.modelLabel} title={t.probe.modelTitle} />
         <div className="model-grid">
           {probeGroups.map((group) => <ModelCard key={group.title} {...group} />)}
         </div>
       </section>
       <section className="section table-section">
-        <SectionHeading label="Specifications" title="Probe card specification matrix" />
+        <SectionHeading label={t.probe.specLabel} title={t.probe.specTitle} />
         <ResponsiveTable
           headers={["Model", "Platform", "Digital Channels", "DPS / HV / Analog", "Size", "Thickness", "Window Size"]}
           rows={probeSpecs}
         />
       </section>
-      <ApplicationStrip items={["Wafer probe test", "High-density digital test", "Mixed-signal interface", "Platform conversion projects"]} />
-      <Cta title="Need a probe card for a specific test platform?" text="Send your platform, channel count, DPS/HV requirements, window size and application details." />
+      <ApplicationStrip items={t.probe.applications} />
+      <Cta lang={lang} t={t} title={t.probe.ctaTitle} text={t.probe.ctaText} />
     </>
   );
 }
 
-function BurnInSocketsPage() {
+function BurnInSocketsPage({ lang, t }) {
   return (
     <>
       <PageHero
-        label="Burn-in Sockets"
-        title="Burn-in Socket Solutions"
-        text="High-reliability burn-in sockets for HTOL, HAST and high-temperature semiconductor reliability test environments."
+        lang={lang}
+        t={t}
+        label={t.sockets.label}
+        title={t.sockets.title}
+        text={t.sockets.text}
         image="hero-burnin-socket.png"
       />
       <section className="section table-section">
-        <SectionHeading label="Mechanical & Electrical" title="Core socket characteristics" />
+        <SectionHeading label={t.sockets.specLabel} title={t.sockets.specTitle} />
         <ResponsiveTable
           headers={["Parameter", "Value"]}
           rows={[
@@ -555,7 +1024,7 @@ function BurnInSocketsPage() {
         />
       </section>
       <section className="section">
-        <SectionHeading label="Socket Types" title="Configurable socket structures for reliability test" />
+        <SectionHeading label={t.sockets.typeLabel} title={t.sockets.typeTitle} />
         <div className="type-grid">
           {socketTypes.map((type) => (
             <article className="type-card" key={type.title}>
@@ -570,9 +1039,9 @@ function BurnInSocketsPage() {
       </section>
       <section id="probe-pins" className="section split-section">
         <div>
-          <p className="eyebrow">Contact Components</p>
-          <h2>Probe Pins</h2>
-          <p>Precision contact components used in burn-in socket and test interface applications, supporting stable electrical contact and long operating lifetime.</p>
+          <p className="eyebrow">{t.sockets.pinsLabel}</p>
+          <h2>{t.sockets.pinsTitle}</h2>
+          <p>{t.sockets.pinsText}</p>
           <div className="pill-row">
             <span>0.35 pitch</span>
             <span>0.4 pitch</span>
@@ -581,36 +1050,38 @@ function BurnInSocketsPage() {
         </div>
         <img className="feature-image contain" src={img("probe-pins.png")} alt="Probe pins" />
       </section>
-      <ApplicationStrip items={["HTOL socket programs", "HAST stress testing", "High-temperature validation", "Multi-site burn-in boards"]} />
-      <Cta title="Need a burn-in socket configuration?" text="Send package size, pitch, temperature target, site count and reliability test conditions." />
+      <ApplicationStrip items={t.sockets.applications} />
+      <Cta lang={lang} t={t} title={t.sockets.ctaTitle} text={t.sockets.ctaText} />
     </>
   );
 }
 
-function BoardsPage() {
+function BoardsPage({ lang, t }) {
   const groups = ["HTOL Burn-in Boards", "Independent Temperature-Control HTOL Boards", "HAST Burn-in Boards", "HAST Mother-Daughter Boards"];
   return (
     <>
       <PageHero
-        label="HTOL / HAST Boards"
-        title="HTOL / HAST Burn-in Boards"
-        text="Custom burn-in boards for high-temperature operating life tests and highly accelerated stress test environments."
+        lang={lang}
+        t={t}
+        label={t.boards.label}
+        title={t.boards.title}
+        text={t.boards.text}
         image="hero-htol-board.png"
       />
       <section className="section">
-        <SectionHeading label="Board Families" title="Reliability board configurations" />
+        <SectionHeading label={t.boards.familyLabel} title={t.boards.familyTitle} />
         <div className="board-family-grid">
           {groups.map((group) => (
             <article className="family-card" key={group}>
               <Layers3 size={32} />
               <h3>{group}</h3>
-              <p>Custom board layout, socket arrangement and material stack-up can be configured by package and test condition.</p>
+              <p>{t.boards.familyText}</p>
             </article>
           ))}
         </div>
       </section>
       <section className="section">
-        <SectionHeading label="Product Images" title="Board examples from reliability test applications" />
+        <SectionHeading label={t.boards.imageLabel} title={t.boards.imageTitle} />
         <div className="image-card-grid">
           {boardSpecs.map((row) => (
             <article className="image-card" key={row[0]}>
@@ -622,55 +1093,50 @@ function BoardsPage() {
         </div>
       </section>
       <section className="section table-section">
-        <SectionHeading label="Specifications" title="HTOL and HAST board specification table" />
+        <SectionHeading label={t.boards.specLabel} title={t.boards.specTitle} />
         <ResponsiveTable
           headers={["Product", "Category", "Size", "Layers", "Material", "Package", "Pitch", "Site"]}
           rows={boardSpecs.map((row) => row.slice(0, 8))}
         />
       </section>
-      <ApplicationStrip items={["High-temperature operating life", "Highly accelerated stress test", "Independent temperature control", "Mother-daughter board setups"]} />
-      <Cta title="Need a custom HTOL or HAST board?" text="Send package, pitch, site count, board size limits, socket type and chamber or platform requirements." />
+      <ApplicationStrip items={t.boards.applications} />
+      <Cta lang={lang} t={t} title={t.boards.ctaTitle} text={t.boards.ctaText} />
     </>
   );
 }
 
-function TemperatureControllersPage() {
+function TemperatureControllersPage({ lang, t }) {
   return (
     <>
       <PageHero
-        label="Temperature Controllers"
-        title="6-Channel Temperature Controller"
-        text="Independent PID temperature control system for burn-in and semiconductor reliability test setups."
+        lang={lang}
+        t={t}
+        label={t.controller.label}
+        title={t.controller.title}
+        text={t.controller.text}
         image="hero-temperature-controller.png"
       />
       <section className="section split-section">
         <div>
-          <p className="eyebrow">Key Features</p>
-          <h2>Independent multi-channel control</h2>
+          <p className="eyebrow">{t.controller.featureLabel}</p>
+          <h2>{t.controller.featureTitle}</h2>
           <ul className="check-list">
-            {[
-              "6-channel independent control",
-              "PID temperature adjustment",
-              "PT100 or K-type thermocouple input",
-              "RS485 / MODBUS RTU communication",
-              "Monitoring software support",
-              "Suitable for burn-in and reliability test setups",
-            ].map((item) => <li key={item}><CheckCircle2 size={18} /> {item}</li>)}
+            {t.controller.features.map((item) => <li key={item}><CheckCircle2 size={18} /> {item}</li>)}
           </ul>
         </div>
         <img className="feature-image contain" src={img("temperature-controller.png")} alt="6-channel temperature controller" />
       </section>
       <section className="section table-section">
-        <SectionHeading label="Technical Specifications" title="Controller specification table" />
+        <SectionHeading label={t.controller.specLabel} title={t.controller.specTitle} />
         <ResponsiveTable headers={["Item", "Specification"]} rows={controllerSpecs} />
       </section>
-      <ApplicationStrip items={["Socket heating setups", "Independent HTOL boards", "Reliability lab fixtures", "Temperature validation workflows"]} />
-      <Cta title="Need temperature control for a burn-in setup?" text="Send channel count, input sensor type, power requirements, temperature range and board configuration." />
+      <ApplicationStrip items={t.controller.applications} />
+      <Cta lang={lang} t={t} title={t.controller.ctaTitle} text={t.controller.ctaText} />
     </>
   );
 }
 
-function ContactPage() {
+function ContactPage({ lang, t }) {
   const [formData, setFormData] = useState(initialContactForm);
   const [fieldErrors, setFieldErrors] = useState({});
   const [formStatus, setFormStatus] = useState({ type: "", message: "" });
@@ -693,7 +1159,7 @@ function ContactPage() {
     event.preventDefault();
     setFormStatus({ type: "", message: "" });
 
-    const errors = validateContactForm(formData);
+    const errors = validateContactForm(formData, t.contact.validation);
     setFieldErrors(errors);
 
     if (Object.keys(errors).length > 0) {
@@ -715,48 +1181,50 @@ function ContactPage() {
 
       setFormData(initialContactForm);
       setFieldErrors({});
-      setFormStatus({ type: "success", message: CONTACT_SUCCESS_MESSAGE });
+      setFormStatus({ type: "success", message: t.contact.success });
     } catch (error) {
-      setFormStatus({ type: "error", message: CONTACT_ERROR_MESSAGE });
+      setFormStatus({ type: "error", message: t.contact.error });
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const inputFields = [
-    { label: "Name", name: "name", required: true },
-    { label: "Company", name: "company", required: true },
-    { label: "Email", name: "email", type: "email", required: true },
-    { label: "Country", name: "country" },
+    { label: t.contact.fields.name, name: "name", required: true },
+    { label: t.contact.fields.company, name: "company", required: true },
+    { label: t.contact.fields.email, name: "email", type: "email", required: true },
+    { label: t.contact.fields.country, name: "country" },
   ];
 
   const secondaryFields = [
-    { label: "Target Application", name: "targetApplication" },
-    { label: "Test Platform", name: "testPlatform" },
-    { label: "Package Size", name: "packageSize" },
-    { label: "Pitch", name: "pitch" },
-    { label: "Channel Count", name: "channelCount" },
-    { label: "DPS / HV / Analog Requirements", name: "dpsHvAnalogRequirements" },
-    { label: "Temperature Range", name: "temperatureRange" },
-    { label: "Site Count", name: "siteCount" },
-    { label: "Expected Quantity", name: "expectedQuantity" },
+    { label: t.contact.fields.targetApplication, name: "targetApplication" },
+    { label: t.contact.fields.testPlatform, name: "testPlatform" },
+    { label: t.contact.fields.packageSize, name: "packageSize" },
+    { label: t.contact.fields.pitch, name: "pitch" },
+    { label: t.contact.fields.channelCount, name: "channelCount" },
+    { label: t.contact.fields.dpsHvAnalogRequirements, name: "dpsHvAnalogRequirements" },
+    { label: t.contact.fields.temperatureRange, name: "temperatureRange" },
+    { label: t.contact.fields.siteCount, name: "siteCount" },
+    { label: t.contact.fields.expectedQuantity, name: "expectedQuantity" },
   ];
 
   return (
     <>
       <PageHero
-        label="Request a Quote"
-        title="Contact / Request a Quote"
-        text="Submit your technical requirements through the request form. BUYDASH will review your application and help identify the right configuration."
-        visual={<ContactHeroVisual />}
+        lang={lang}
+        t={t}
+        label={t.contact.label}
+        title={t.contact.title}
+        text={t.contact.text}
+        image="probe-card.png"
       />
       <section className="section contact-section">
         <form className="quote-form" onSubmit={submitForm} noValidate>
           <div className="form-intro full">
-            <p className="eyebrow">Technical Request Form</p>
-            <h2>Share your test requirements through the request form</h2>
-            <p>Use the request form to submit package details, pitch, platform, channel count, DPS/HV needs, temperature range, site count and application goals. The BUYDASH team will review the information and follow up by email.</p>
-            <p className="form-note">For drawings or technical documents, please mention them in the message. Our team will follow up by email.</p>
+            <p className="eyebrow">{t.contact.formLabel}</p>
+            <h2>{t.contact.formTitle}</h2>
+            <p>{t.contact.formText}</p>
+            <p className="form-note">{t.contact.note}</p>
           </div>
           <label className="honeypot" aria-hidden="true">
             <span>Website</span>
@@ -785,7 +1253,7 @@ function ContactPage() {
             </label>
           ))}
           <label>
-            <span>Product Type *</span>
+            <span>{t.contact.fields.productType} *</span>
             <select
               name="productType"
               value={formData.productType}
@@ -793,8 +1261,8 @@ function ContactPage() {
               aria-invalid={fieldErrors.productType ? "true" : "false"}
               aria-describedby={fieldErrors.productType ? "productType-error" : undefined}
             >
-              <option value="" disabled>Select product type</option>
-              {["Probe Card", "Burn-in Socket", "HTOL / HAST Board", "Temperature Controller", "Probe Pins", "Custom Solution"].map((type) => <option key={type}>{type}</option>)}
+              <option value="" disabled>{t.contact.productPlaceholder}</option>
+              {t.contact.productOptions.map((type) => <option key={type}>{type}</option>)}
             </select>
             {fieldErrors.productType ? <span className="field-error" id="productType-error">{fieldErrors.productType}</span> : null}
           </label>
@@ -811,13 +1279,13 @@ function ContactPage() {
             </label>
           ))}
           <label className="full">
-            <span>Message *</span>
+            <span>{t.contact.fields.message} *</span>
             <textarea
               name="message"
               value={formData.message}
               onChange={updateField}
               rows="6"
-              placeholder="Share test conditions, package details, target schedule and any special requirements."
+              placeholder={t.contact.messagePlaceholder}
               aria-invalid={fieldErrors.message ? "true" : "false"}
               aria-describedby={fieldErrors.message ? "message-error" : undefined}
             />
@@ -827,7 +1295,7 @@ function ContactPage() {
             <p className={`form-status ${formStatus.type}`} role="status">{formStatus.message}</p>
           ) : null}
           <button className="primary-btn form-submit" type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Sending..." : "Submit Request"} <ArrowRight size={17} />
+            {isSubmitting ? t.contact.sending : t.contact.submit} <ArrowRight size={17} />
           </button>
         </form>
         <aside className="contact-aside">
@@ -835,9 +1303,9 @@ function ContactPage() {
           <p>Semiconductor Test Interfaces</p>
           <dl>
             <div><dt>Email</dt><dd><a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></dd></div>
-            <div><dt>Business Registration No.</dt><dd>189-07-02993</dd></div>
-            <div><dt>Mail-order Business Registration No.</dt><dd>2024-Gyeonggi Ansan-3370</dd></div>
-            <div><dt>Location</dt><dd>Ansan-si, Gyeonggi-do, Republic of Korea</dd></div>
+            <div><dt>{t.footer.business}</dt><dd>189-07-02993</dd></div>
+            <div><dt>{t.footer.mailOrder}</dt><dd>2024-Gyeonggi Ansan-3370</dd></div>
+            <div><dt>{t.footer.location}</dt><dd>Ansan-si, Gyeonggi-do, Republic of Korea</dd></div>
           </dl>
         </aside>
       </section>
@@ -845,7 +1313,7 @@ function ContactPage() {
   );
 }
 
-function PageHero({ label, title, text, image, visual }) {
+function PageHero({ lang = "en", t = copy.en, label, title, text, image, visual }) {
   return (
     <section className="hero page-hero">
       <div className="hero-copy">
@@ -853,23 +1321,13 @@ function PageHero({ label, title, text, image, visual }) {
         <h1>{title}</h1>
         <p className="hero-text">{text}</p>
         <div className="hero-actions">
-          <a className="primary-btn" href="/contact">Request a Quote <ArrowRight size={17} /></a>
+          <a className="primary-btn" href={localizePath(lang, "/contact")}>{t.requestQuote} <ArrowRight size={17} /></a>
         </div>
       </div>
       <div className="page-hero-visual">
         {visual || <img src={img(image)} alt={title} />}
       </div>
     </section>
-  );
-}
-
-function ContactHeroVisual() {
-  return (
-    <div className="contact-hero-visual" aria-label="BUYDASH test interface products">
-      <img className="contact-hero-probe" src={img("probe-card.png")} alt="Probe card" />
-      <img className="contact-hero-socket" src={img("burn-in-socket.png")} alt="Burn-in socket" />
-      <img className="contact-hero-controller" src={img("temperature-controller.png")} alt="Temperature controller" />
-    </div>
   );
 }
 
@@ -931,30 +1389,30 @@ function ApplicationStrip({ items }) {
   );
 }
 
-function Cta({ title, text }) {
+function Cta({ lang = "en", t = copy.en, title, text }) {
   return (
     <section className="cta-section">
       <div>
         <h2>{title}</h2>
         <p>{text}</p>
       </div>
-      <a className="primary-btn" href="/contact">Request a Quote <ArrowRight size={17} /></a>
+      <a className="primary-btn" href={localizePath(lang, "/contact")}>{t.requestQuote} <ArrowRight size={17} /></a>
     </section>
   );
 }
 
-function Footer() {
+function Footer({ t = copy.en }) {
   return (
     <footer className="footer">
       <div>
         <h2>BUYDASH</h2>
-        <p>Semiconductor Test Interfaces</p>
+        <p>{t.brandSubtitle}</p>
       </div>
       <div className="footer-info">
         <p><a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></p>
-        <p>Business Registration No. 189-07-02993</p>
-        <p>Mail-order Business Registration No. 2024-Gyeonggi Ansan-3370</p>
-        <p>Ansan-si, Gyeonggi-do, Republic of Korea</p>
+        <p>{t.footer.business}</p>
+        <p>{t.footer.mailOrder}</p>
+        <p>{t.footer.location}</p>
       </div>
     </footer>
   );
